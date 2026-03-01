@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Life Planner" />
+  <title>Chantale's Life Planner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Italianno&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue-dark:  #1a5a8a;
+      --blue:       #2aa8e0;
+      --blue-tint:  #f0faff;
+      --blue-border:#c8eaf8;
+      --gold:       #fff3b0;
+      --gold-text:  #8a6a00;
+      --text:       #1a1a1a;
+      --text-mid:   #555;
+      --text-muted: #bbb;
+      --grey-stat:  #7a7068;
+      --border:     #f0f0f0;
+      --card-bg:    #f8fdff;
+      --radius:     12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: white; color: var(--text);
+      min-height: 100vh; min-height: -webkit-fill-available;
+      overflow-x: hidden;
+    }
+
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* LOADING */
+    .loading-overlay {
+      position: fixed; inset: 0; background: white;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 999; transition: opacity 0.4s;
+    }
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+    .loading-title { font-family: 'Great Vibes', cursive; font-size: 52px; color: var(--blue); letter-spacing: 2px; }
+    .loading-bar { width: 60px; height: 2px; background: var(--blue-border); margin-top: 20px; border-radius: 1px; overflow: hidden; }
+    .loading-bar::after { content: ''; display: block; height: 100%; background: linear-gradient(90deg, var(--blue-dark), var(--blue)); animation: slide 1.2s ease-in-out infinite; }
+
+    /* LOGIN */
+    #login-screen { background: white; align-items: center; justify-content: center; padding: 40px 28px; }
+    .login-box { width: 100%; max-width: 380px; animation: fadeUp 0.6s ease both; }
+    .login-logo { text-align: center; margin-bottom: 44px; }
+    .login-logo-sub { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-top: 6px; display: block; }
+    .login-heading { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .login-sub { font-size: 13px; color: var(--text-mid); margin-bottom: 28px; line-height: 1.5; }
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px; }
+    .form-input { width: 100%; background: var(--blue-tint); border: 1.5px solid var(--blue-border); border-radius: var(--radius); padding: 13px 16px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; color: var(--text); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+    .form-input:focus { border-color: var(--blue); }
+    .form-input::placeholder { color: #c0d8e8; }
+    .btn-primary { width: 100%; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); color: white; border: none; border-radius: var(--radius); padding: 15px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 8px; }
+    .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+    .auth-toggle { text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-mid); }
+    .auth-toggle a { color: var(--blue); text-decoration: none; cursor: pointer; font-weight: 500; }
+    .error-msg { background: #fff0ee; border: 1px solid #ffd0c8; border-radius: var(--radius); padding: 11px 14px; font-size: 13px; color: #c04030; margin-top: 10px; display: none; }
+    .error-msg.show { display: block; }
+    .success-msg { background: #f0fff4; border: 1px solid #b8e8c8; border-radius: var(--radius); padding: 11px 14px; font-size: 13px; color: #2a7a4a; margin-top: 10px; display: none; }
+    .success-msg.show { display: block; }
+
+    /* APP TOP BAR */
+    .top-bar { background: white; padding: 16px 18px 14px; padding-top: calc(16px + env(safe-area-inset-top)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .brand-c    { font-family: 'Italianno', cursive; font-size: 32px; color: var(--text); line-height: 1; }
+    .brand-rest { font-family: 'Great Vibes', cursive; font-size: 24px; color: var(--text); letter-spacing: 2px; }
+    .brand-lp   { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--blue); letter-spacing: 2px; }
+    .add-btn { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 300; line-height: 1; background: var(--blue); color: white; flex-shrink: 0; border: none; cursor: pointer; }
+
+    /* HERO */
+    .hero { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); padding: 22px 18px 26px; }
+    .hero-line1 { font-size: 22px; font-weight: 300; color: rgba(255,255,255,0.85); display: block; line-height: 1.2; }
+    .hero-name { font-family: 'Great Vibes', cursive; font-size: 44px; color: white; display: block; letter-spacing: 2px; line-height: 1.1; }
+    .hero-name .name-c { font-family: 'Italianno', cursive; font-size: 52px; line-height: 1; }
+    .hero-date { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 6px; }
+
+    /* STATS */
+    .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 14px 14px 0; background: white; }
+    .stat { background: var(--blue-tint); border: 1px solid var(--blue-border); border-radius: var(--radius); padding: 11px 8px; text-align: center; }
+    .stat-val { font-size: 24px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; color: var(--grey-stat); }
+    .stat-lbl { font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #80bcd0; margin-top: 3px; }
+
+    /* CONTENT */
+    .app-content { flex: 1; overflow-y: auto; padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .section-row { display: flex; align-items: center; justify-content: space-between; padding: 0 14px; margin-top: 18px; margin-bottom: 10px; }
+    .section-hd { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+    .section-action { font-size: 12px; color: var(--blue); background: none; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; }
+
+    .content-pad { padding: 0 14px 14px; }
+
+    .block-card { background: var(--card-bg); border: 1px solid var(--blue-border); border-radius: var(--radius); padding: 14px 14px 14px 18px; margin-bottom: 10px; position: relative; overflow: hidden; cursor: pointer; }
+    .block-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--blue); border-radius: 2px 0 0 2px; }
+    .block-tag { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 4px; }
+    .block-result { font-size: 13px; font-weight: 500; color: #222; line-height: 1.4; }
+    .block-meta { display: flex; gap: 6px; margin-top: 7px; align-items: center; flex-wrap: wrap; }
+    .badge { font-size: 9px; font-weight: 700; border-radius: 20px; padding: 3px 9px; letter-spacing: 0.5px; }
+    .badge-must { background: var(--gold); color: var(--gold-text); }
+    .badge-cat  { background: #e8f5ff; color: var(--blue-dark); }
+    .duration { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+
+    .habits-wrap { background: white; border: 1px solid var(--blue-border); border-radius: var(--radius); overflow: hidden; margin: 0 14px; }
+    .habit-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--blue-tint); }
+    .habit-row:last-child { border-bottom: none; }
+    .habit-name { font-size: 13px; font-weight: 400; color: #333; }
+    .habit-check-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--blue-border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: transparent; flex-shrink: 0; background: none; cursor: pointer; transition: all 0.2s; }
+    .habit-check-btn.done { background: var(--blue); border-color: var(--blue); color: white; }
+
+    .empty-state { text-align: center; padding: 36px 20px; }
+    .empty-state-icon { font-size: 32px; margin-bottom: 10px; opacity: 0.3; }
+    .empty-state-text { font-size: 16px; font-weight: 500; color: var(--text-mid); margin-bottom: 6px; }
+    .empty-state-sub { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .btn-add { display: inline-flex; align-items: center; gap: 6px; background: var(--blue-tint); border: 1px solid var(--blue-border); color: var(--blue); border-radius: var(--radius); padding: 10px 18px; font-size: 13px; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; margin-top: 14px; }
+
+    .coming-soon { text-align: center; padding: 60px 24px; }
+    .coming-soon-icon { font-size: 44px; margin-bottom: 14px; opacity: 0.35; }
+    .coming-soon-title { font-size: 20px; font-weight: 600; color: var(--text-mid); margin-bottom: 8px; }
+    .coming-soon-sub { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+    .coming-soon-tag { display: inline-block; margin-top: 20px; background: var(--blue-tint); border: 1px solid var(--blue-border); color: var(--blue); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+
+    .page-title { font-size: 22px; font-weight: 700; color: var(--text); padding: 20px 14px 8px; }
+
+    .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 14px 14px; }
+    .cat-section-label { grid-column: 1 / -1; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); padding: 6px 0 2px; }
+    .category-card { background: var(--card-bg); border: 1px solid var(--blue-border); border-radius: var(--radius); padding: 14px; cursor: pointer; transition: border-color 0.2s; }
+    .category-card:active { border-color: var(--blue); }
+    .cat-abbr { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 5px; }
+    .cat-name { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .cat-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    /* PROFILE */
+    .profile-hero { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); padding: 28px 18px 24px; }
+    .profile-name-display { font-family: 'Great Vibes', cursive; font-size: 42px; color: white; letter-spacing: 2px; line-height: 1; }
+    .profile-name-display .pc { font-family: 'Italianno', cursive; font-size: 50px; line-height: 1; }
+    .profile-email-display { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 6px; }
+    .profile-section { padding: 16px 14px; }
+    .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 14px; margin-bottom: 8px; background: var(--card-bg); border: 1px solid var(--blue-border); border-radius: var(--radius); cursor: pointer; }
+    .settings-item-label { font-size: 14px; color: var(--text); }
+    .settings-item-arrow { color: var(--blue); font-size: 16px; }
+    .btn-danger { width: 100%; background: #fff0ee; border: 1px solid #ffd0c8; color: #c04030; border-radius: var(--radius); padding: 14px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 8px; }
+
+    /* BOTTOM NAV */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); display: flex; padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 4px; cursor: pointer; border: none; background: none; gap: 3px; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .nav-item.active { color: var(--blue); }
+    .nav-icon { font-size: 19px; line-height: 1; }
+    .nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: flex-end; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; border-top: 1px solid var(--border); border-radius: 24px 24px 0 0; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px 20px calc(20px + env(safe-area-inset-bottom)); animation: slideUp 0.3s ease; }
+    .modal-handle { width: 36px; height: 4px; background: var(--blue-border); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+
+    .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-title">Life Planner</div>
+  <div class="loading-bar"></div>
+</div>
+
+<!-- LOGIN -->
+<div class="screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div>
+        <span style="font-family:'Italianno',cursive;font-size:42px;color:var(--blue-dark);line-height:1">C</span><span style="font-family:'Great Vibes',cursive;font-size:32px;color:var(--blue-dark);letter-spacing:2px">hantale's </span><span style="font-family:'Great Vibes',cursive;font-size:36px;color:var(--blue);letter-spacing:2px">Life Planner</span>
+      </div>
+      <span class="login-logo-sub">Results · Purpose · Massive Action</span>
+    </div>
+
+    <div id="login-form">
+      <div class="login-heading">Welcome back</div>
+      <p class="login-sub">Sign in to continue your journey.</p>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="login-email" placeholder="you@example.com" autocomplete="email" /></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="login-password" placeholder="••••••••" autocomplete="current-password" /></div>
+      <div class="error-msg" id="login-error"></div>
+      <button class="btn-primary" id="login-btn" onclick="handleLogin()">Sign In</button>
+      <div class="auth-toggle">No account? <a onclick="showSignup()">Create one</a></div>
+    </div>
+
+    <div id="signup-form" style="display:none">
+      <div class="login-heading">Create account</div>
+      <p class="login-sub">Start planning with intention.</p>
+      <div class="form-group"><label class="form-label">Your Name</label><input type="text" class="form-input" id="signup-name" placeholder="Chantale" autocomplete="given-name" /></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signup-email" placeholder="you@example.com" autocomplete="email" /></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signup-password" placeholder="Min. 6 characters" autocomplete="new-password" /></div>
+      <div class="error-msg" id="signup-error"></div>
+      <div class="success-msg" id="signup-success"></div>
+      <button class="btn-primary" id="signup-btn" onclick="handleSignup()">Create Account</button>
+      <div class="auth-toggle">Have an account? <a onclick="showLogin()">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="screen" id="app-screen">
+
+  <div class="top-bar">
+    <div style="display:flex;align-items:baseline">
+      <span class="brand-c">C</span><span class="brand-rest">hantale's </span><span class="brand-lp">Life Planner</span>
+    </div>
+    <button class="add-btn" onclick="showAddModal()">+</button>
+  </div>
+
+  <div class="app-content">
+
+    <!-- TODAY -->
+    <div class="view active" id="view-today">
+      <div class="hero">
+        <span class="hero-line1">Good <span id="time-greeting">morning</span>,</span>
+        <span class="hero-name"><span class="name-c">C</span><span id="user-first-name">hantale</span></span>
+        <div class="hero-date" id="today-full-date"></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-val" id="stat-blocks">0</div><div class="stat-lbl">Blocks</div></div>
+        <div class="stat"><div class="stat-val" id="stat-habits">0</div><div class="stat-lbl">Habits</div></div>
+        <div class="stat"><div class="stat-val" id="stat-week">—</div><div class="stat-lbl">Week</div></div>
+      </div>
+      <div class="section-row">
+        <div class="section-hd">Today's RPM Blocks</div>
+        <button class="section-action" onclick="switchView('daily')">View All →</button>
+      </div>
+      <div class="content-pad" id="today-blocks-preview">
+        <div class="empty-state">
+          <div class="empty-state-icon">✦</div>
+          <div class="empty-state-text">No blocks planned yet</div>
+          <div class="empty-state-sub">Tap + to create your first RPM block for today</div>
+          <button class="btn-add" onclick="showAddModal()">+ Add RPM Block</button>
+        </div>
+      </div>
+      <div class="section-row">
+        <div class="section-hd">Daily Habits</div>
+        <button class="section-action" onclick="switchView('habits')">Track →</button>
+      </div>
+      <div id="today-habits-preview">
+        <div class="empty-state">
+          <div class="empty-state-icon">◇</div>
+          <div class="empty-state-text">No habits set up yet</div>
+          <div class="empty-state-sub">Your daily habits will appear here once set up</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY RPM -->
+    <div class="view" id="view-daily">
+      <div class="coming-soon">
+        <div class="coming-soon-icon">📋</div>
+        <div class="coming-soon-title">Daily RPM Plan</div>
+        <div class="coming-soon-sub">Full RPM block builder with<br>Result · Purpose · MAP · Status<br>Daily energy & nutrition tracker</div>
+        <div class="coming-soon-tag">Coming in Session 2</div>
+      </div>
+    </div>
+
+    <!-- WEEKLY -->
+    <div class="view" id="view-weekly">
+      <div class="coming-soon">
+        <div class="coming-soon-icon">📅</div>
+        <div class="coming-soon-title">Weekly RPM Plan</div>
+        <div class="coming-soon-sub">Weekly capture · RPM blocks<br>Commit to calendar · Celebrate wins</div>
+        <div class="coming-soon-tag">Coming in Session 3</div>
+      </div>
+    </div>
+
+    <!-- HABITS -->
+    <div class="view" id="view-habits">
+      <div class="coming-soon">
+        <div class="coming-soon-icon">✓</div>
+        <div class="coming-soon-title">Habit Tracker</div>
+        <div class="coming-soon-sub">Daily habit tracking<br>Monthly % completion<br>Streak tracking</div>
+        <div class="coming-soon-tag">Coming in Session 2</div>
+      </div>
+    </div>
+
+    <!-- LIFE AREAS -->
+    <div class="view" id="view-categories">
+      <div class="page-title">Life Areas</div>
+      <div class="categories-grid" id="categories-grid"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="view" id="view-profile">
+      <div class="profile-hero">
+        <div class="profile-name-display"><span class="pc">C</span><span id="profile-first-name">hantale</span></div>
+        <div class="profile-email-display" id="profile-email">—</div>
+      </div>
+      <div class="profile-section">
+        <div class="settings-item"><span class="settings-item-label">📖 My Vision & Purpose</span><span class="settings-item-arrow">›</span></div>
+        <div class="settings-item"><span class="settings-item-label">⚙️ Manage Habits</span><span class="settings-item-arrow">›</span></div>
+        <div class="settings-item"><span class="settings-item-label">📤 Export to iCal</span><span class="settings-item-arrow">›</span></div>
+        <div class="settings-item"><span class="settings-item-label">🔔 Notification Shortcuts</span><span class="settings-item-arrow">›</span></div>
+        <button class="btn-danger" onclick="handleSignOut()">Sign Out</button>
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-today" onclick="switchView('today')"><span class="nav-icon">◈</span><span class="nav-label">Today</span></button>
+    <button class="nav-item" id="nav-daily" onclick="switchView('daily')"><span class="nav-icon">▦</span><span class="nav-label">Daily</span></button>
+    <button class="nav-item" id="nav-weekly" onclick="switchView('weekly')"><span class="nav-icon">◫</span><span class="nav-label">Weekly</span></button>
+    <button class="nav-item" id="nav-habits" onclick="switchView('habits')"><span class="nav-icon">◉</span><span class="nav-label">Habits</span></button>
+    <button class="nav-item" id="nav-categories" onclick="switchView('categories')"><span class="nav-icon">◧</span><span class="nav-label">Life Areas</span></button>
+    <button class="nav-item" id="nav-profile" onclick="switchView('profile')"><span class="nav-icon">◎</span><span class="nav-label">Profile</span></button>
+  </nav>
+
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal-overlay" id="add-modal" onclick="closeAddModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">New RPM Block</div>
+    <p style="font-size:14px;color:var(--text-mid);line-height:1.8;">
+      The full RPM block builder is coming in Session 2.<br><br>
+      <strong>Result</strong> — What do I want?<br>
+      <strong>Purpose</strong> — Why do I want it?<br>
+      <strong>Massive Action Plan</strong> — How do I achieve it?<br>
+      <strong>Category, Duration, Priority, Status</strong>
+    </p>
+    <button class="btn-primary" style="margin-top:24px" onclick="document.getElementById('add-modal').classList.remove('open')">Got it</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://sagtwgxxrfopqaskaxdy.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3R3Z3h4cmZvcHFhc2theGR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMjIyMzksImV4cCI6MjA4Nzg5ODIzOX0.Ch9pPhOoVU_FsOomxg2wQvK66wGAkP-ch1jFEK909Nw';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const CATEGORIES = [
+  { id:1,  abbr:'H&F',    name:'My Body',        desc:'Health & Fitness',               personal:true  },
+  { id:2,  abbr:'EM',     name:'My Mind',         desc:'Exceptional Mindset',            personal:true  },
+  { id:3,  abbr:'SE',     name:'My Soul',         desc:'Spiritual Enlightenment',        personal:true  },
+  { id:4,  abbr:'EL',     name:'My Love',         desc:'Eternal Love',                   personal:true  },
+  { id:5,  abbr:'F&F',    name:'My Connections',  desc:'Family & Friends',               personal:true  },
+  { id:6,  abbr:'AFF',    name:'My Finances',     desc:'Absolute Financial Freedom',     personal:true  },
+  { id:7,  abbr:'COTGL',  name:'My Environments', desc:'Creator Of The Good Life',       personal:true  },
+  { id:8,  abbr:'FGS',    name:'My Skills',       desc:'Forever Growing Skillset',       personal:false },
+  { id:9,  abbr:'GK&CNC', name:'My Marketing',    desc:'Get Known & Create New Clients', personal:false },
+  { id:10, abbr:'SEC',    name:'My Clients',      desc:'Support Existing Clients',       personal:false },
+  { id:11, abbr:'BS',     name:'My Profit',       desc:'Business Success',               personal:false },
+  { id:12, abbr:'LBE',    name:'My Path',         desc:'Lead By Example',                personal:false },
+  { id:13, abbr:'ABR',    name:'My Community',    desc:'Amazing Business Relationships', personal:false },
+];
+
+let currentUser = null;
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  hideLoading();
+  if (session?.user) { currentUser = session.user; showApp(); }
+  else { showScreen('login-screen'); }
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) { currentUser = session.user; showApp(); }
+    else if (event === 'SIGNED_OUT') { currentUser = null; showScreen('login-screen'); }
+  });
+}
+
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  if (!email || !password) { showError(err, 'Please enter your email and password.'); return; }
+  btn.innerHTML = '<span class="spinner"></span>'; btn.disabled = true;
+  err.classList.remove('show');
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.innerHTML = 'Sign In'; btn.disabled = false;
+  if (error) showError(err, error.message);
+}
+
+async function handleSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const btn = document.getElementById('signup-btn');
+  const err = document.getElementById('signup-error');
+  const suc = document.getElementById('signup-success');
+  if (!name || !email || !password) { showError(err, 'Please fill in all fields.'); return; }
+  if (password.length < 6) { showError(err, 'Password must be at least 6 characters.'); return; }
+  btn.innerHTML = '<span class="spinner"></span>'; btn.disabled = true;
+  err.classList.remove('show');
+  const { error } = await sb.auth.signUp({ email, password, options: { data: { full_name: name } } });
+  btn.innerHTML = 'Create Account'; btn.disabled = false;
+  if (error) showError(err, error.message);
+  else { suc.textContent = 'Account created! Check your email to confirm, then sign in.'; suc.classList.add('show'); }
+}
+
+async function handleSignOut() { await sb.auth.signOut(); }
+function showLogin() { document.getElementById('login-form').style.display='block'; document.getElementById('signup-form').style.display='none'; }
+function showSignup() { document.getElementById('login-form').style.display='none'; document.getElementById('signup-form').style.display='block'; }
+
+function showApp() {
+  showScreen('app-screen');
+  setupDate();
+  setupCategories();
+  setupProfile();
+}
+
+function setupDate() {
+  const now = new Date();
+  const h = now.getHours();
+  document.getElementById('time-greeting').textContent = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+
+  const fullName = currentUser?.user_metadata?.full_name || 'Chantale';
+  const first = fullName.split(' ')[0] || 'Chantale';
+  // Show everything after the first letter (C) in the Great Vibes span
+  document.getElementById('user-first-name').textContent = first.length > 1 ? first.slice(1) : first;
+
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('today-full-date').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  const qStart = Math.floor(now.getMonth() / 3) * 3;
+  const qStartDate = new Date(now.getFullYear(), qStart, 1);
+  const wOfQ = Math.ceil((now - qStartDate) / (7 * 24 * 60 * 60 * 1000));
+  document.getElementById('stat-week').textContent = `W${wOfQ}`;
+}
+
+function setupCategories() {
+  const grid = document.getElementById('categories-grid');
+  grid.innerHTML = '';
+  const pl = document.createElement('div'); pl.className = 'cat-section-label'; pl.textContent = 'Personal'; grid.appendChild(pl);
+  CATEGORIES.filter(c => c.personal).forEach(c => grid.appendChild(makeCatCard(c)));
+  const bl = document.createElement('div'); bl.className = 'cat-section-label'; bl.textContent = 'Professional'; grid.appendChild(bl);
+  CATEGORIES.filter(c => !c.personal).forEach(c => grid.appendChild(makeCatCard(c)));
+}
+
+function makeCatCard(cat) {
+  const div = document.createElement('div');
+  div.className = 'category-card';
+  div.innerHTML = `<div class="cat-abbr">${cat.abbr}</div><div class="cat-name">${cat.name}</div><div class="cat-desc">${cat.desc}</div>`;
+  return div;
+}
+
+function setupProfile() {
+  const fullName = currentUser?.user_metadata?.full_name || 'Chantale';
+  const first = fullName.split(' ')[0] || 'Chantale';
+  document.getElementById('profile-first-name').textContent = first.length > 1 ? first.slice(1) : first;
+  document.getElementById('profile-email').textContent = currentUser?.email || '';
+}
+
+function switchView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  const navEl = document.getElementById(`nav-${view}`);
+  if (navEl) navEl.classList.add('active');
+}
+
+function showAddModal() { document.getElementById('add-modal').classList.add('open'); }
+function closeAddModal(e) { if (e.target === document.getElementById('add-modal')) document.getElementById('add-modal').classList.remove('open'); }
+function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function hideLoading() { const el = document.getElementById('loading'); el.classList.add('hidden'); setTimeout(() => el.remove(), 500); }
+function showError(el, msg) { el.textContent = msg; el.classList.add('show'); }
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
