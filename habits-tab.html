@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)file:///Users/Chantale/Downloads/habits-tab_4.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Daily Habits — Chantale's Life Planner</title>
+<link href="./habits-tab_files/css2" rel="stylesheet">
+<script src="./habits-tab_files/supabase-js@2"></script>
+<style>
+  :root {
+    --blue-dark:  #1a5a8a;
+    --blue:       #2aa8e0;
+    --blue-tint:  #f0faff;
+    --blue-border:#c8eaf8;
+    --text:       #1a1a1a;
+    --text-mid:   #555;
+    --text-muted: #bbb;
+    --grey-stat:  #7a7068;
+    --border:     #f0f0f0;
+    --card-bg:    #f8fdff;
+    --radius:     12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: white; color: var(--text); min-height: 100vh; }
+
+  /* LOADING */
+  .loading-overlay {
+    position: fixed; inset: 0; background: white;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 999; transition: opacity 0.4s;
+  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .loading-title { font-family: 'Great Vibes', cursive; font-size: 48px; color: var(--blue); letter-spacing: 2px; }
+  .loading-bar { width: 60px; height: 2px; background: var(--blue-border); margin-top: 20px; border-radius: 1px; overflow: hidden; }
+  .loading-bar::after { content: ''; display: block; height: 100%; background: linear-gradient(90deg, var(--blue-dark), var(--blue)); animation: slide 1.2s ease-in-out infinite; }
+  @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+
+  /* TOP BAR */
+  .top-bar {
+    background: white; padding: 16px 18px 14px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+  }
+  .brand-c    { font-family: 'Italianno', cursive; font-size: 32px; color: var(--text); line-height: 1; }
+  .brand-rest { font-family: 'Great Vibes', cursive; font-size: 24px; color: var(--text); letter-spacing: 2px; }
+  .brand-lp   { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--blue); letter-spacing: 2px; }
+  .top-bar-right { display: flex; align-items: center; gap: 14px; }
+  .edit-mode-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--blue); background: none; border: none; cursor: pointer; }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); transition: background 0.3s; flex-shrink: 0; }
+  .sync-dot.syncing { background: var(--blue); animation: pulse 1s infinite; }
+  .sync-dot.synced  { background: #3a9c6a; }
+  .sync-dot.error   { background: #c04030; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); padding: 22px 18px 26px; }
+  .hero-line1 { font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.85); display: block; }
+  .hero-name  { font-family: 'Great Vibes', cursive; font-size: 38px; color: white; display: block; letter-spacing: 2px; line-height: 1.1; }
+  .hero-name .name-c { font-family: 'Italianno', cursive; font-size: 46px; line-height: 1; }
+  .hero-sub   { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 6px; }
+
+  /* STATS */
+  .summary-stats { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; padding: 14px 14px 0; }
+  .stat { background: var(--blue-tint); border: 1px solid var(--blue-border); border-radius: var(--radius); padding: 10px 6px; text-align: center; }
+  .stat-val { font-size: 20px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; color: var(--grey-stat); }
+  .stat-val.streak { color: var(--blue-dark); }
+  .stat-lbl { font-size: 8px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #80bcd0; margin-top: 3px; }
+
+  /* SECTION ROW */
+  .section-row { display: flex; align-items: center; justify-content: space-between; padding: 0 14px; margin-top: 18px; margin-bottom: 10px; }
+  .section-hd  { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+  .section-count-badge { font-size: 10px; font-weight: 600; color: var(--blue); background: var(--blue-tint); border: 1px solid var(--blue-border); border-radius: 20px; padding: 2px 9px; }
+
+  /* DAILY LOG */
+  .daily-log-wrap { background: white; border: 1px solid var(--blue-border); border-radius: var(--radius); overflow: hidden; margin: 0 14px; }
+  .log-row { display: flex; align-items: center; padding: 11px 14px; border-bottom: 1px solid var(--blue-tint); gap: 10px; }
+  .log-row:last-child { border-bottom: none; }
+  .log-icon { font-size: 16px; flex-shrink: 0; width: 24px; text-align: center; }
+  .log-info { flex: 1; min-width: 0; }
+  .log-label { font-size: 13px; font-weight: 500; color: var(--text); }
+  .log-goal  { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .log-input-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; width: 140px; }
+  .log-input {
+    width: 72px; flex-shrink: 0; background: var(--blue-tint); border: 1.5px solid var(--blue-border);
+    border-radius: 8px; padding: 7px 10px; font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 500; color: var(--text); text-align: right;
+    outline: none; transition: border-color 0.2s; -webkit-appearance: none;
+  }
+  .log-input:focus { border-color: var(--blue); }
+  .log-input::placeholder { color: #c0d8e8; font-weight: 400; }
+  .log-unit { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .log-goal-hit { width: 20px; height: 20px; border-radius: 50%; background: var(--blue); color: white; font-size: 11px; font-weight: 700; display: none; align-items: center; justify-content: center; flex-shrink: 0; }
+  .log-goal-hit.show { display: flex; }
+
+  /* HABITS */
+  .habits-wrap { background: white; border: 1px solid var(--blue-border); border-radius: var(--radius); overflow: hidden; margin: 0 14px; }
+  .habit-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--blue-tint); transition: background 0.2s; }
+  .habit-row:last-child { border-bottom: none; }
+  .habit-row.dragging  { opacity: 0.35; }
+  .habit-row.drag-over { background: var(--blue-tint); }
+
+  .drag-handle { cursor: grab; color: var(--text-muted); font-size: 18px; flex-shrink: 0; display: none; user-select: none; }
+  .habit-check-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--blue-border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: transparent; flex-shrink: 0; background: none; cursor: pointer; transition: all 0.2s; }
+  .habit-check-btn.done { background: var(--blue); border-color: var(--blue); color: white; }
+  .habit-info { flex: 1; min-width: 0; }
+  .habit-label { font-size: 13px; font-weight: 400; color: #333; line-height: 1.35; }
+  .habit-row.done .habit-label { color: var(--text-muted); text-decoration: line-through; text-decoration-color: #ccc; }
+  .habit-note-text { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .habit-time-lbl { font-size: 11px; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+  .habit-actions { display: none; gap: 6px; flex-shrink: 0; }
+  .action-btn { width: 28px; height: 28px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: transform 0.15s; }
+  .action-btn:active { transform: scale(0.88); }
+  .edit-btn { background: var(--blue-tint); color: var(--blue); }
+  .del-btn  { background: #fff0ee; color: #c04030; }
+  .section-move-select { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600; color: var(--blue-dark); background: var(--blue-tint); border: 1.5px solid var(--blue-border); border-radius: 20px; padding: 4px 10px; outline: none; cursor: pointer; -webkit-appearance: none; flex-shrink: 0; display: none; }
+
+  /* EDIT MODE */
+  .edit-mode .drag-handle          { display: flex; }
+  .edit-mode .habit-actions        { display: flex; }
+  .edit-mode .habit-check-btn      { display: none; }
+  .edit-mode .habit-time-lbl       { display: none; }
+  .edit-mode .section-move-select  { display: block; }
+
+  /* INLINE EDIT */
+  .habit-edit-input { width: 100%; background: var(--blue-tint); border: 1.5px solid var(--blue); border-radius: 8px; padding: 6px 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--text); outline: none; margin-bottom: 4px; }
+  .habit-note-input { width: 100%; background: var(--blue-tint); border: 1.5px solid var(--blue-border); border-radius: 8px; padding: 5px 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; color: var(--text); outline: none; }
+  .habit-note-input:focus { border-color: var(--blue); }
+
+  /* ADD BAR */
+  .add-habit-bar { display: flex; gap: 8px; align-items: center; margin: 10px 14px 0; }
+  .add-habit-input { flex: 1; background: var(--blue-tint); border: 1.5px solid var(--blue-border); border-radius: var(--radius); padding: 10px 14px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--text); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+  .add-habit-input:focus { border-color: var(--blue); }
+  .add-habit-input::placeholder { color: #c0d8e8; }
+  .add-confirm-btn { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); color: white; border: none; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: opacity 0.2s, transform 0.1s; }
+  .add-confirm-btn:active { transform: scale(0.93); opacity: 0.9; }
+
+  /* ALL DONE */
+  .all-done-msg { background: var(--blue-tint); border: 1px solid var(--blue-border); border-radius: var(--radius); padding: 14px 20px; margin: 16px 14px 0; font-size: 13px; font-weight: 500; color: var(--blue-dark); text-align: center; display: none; }
+  .all-done-msg.show { display: block; }
+
+  /* RESET */
+  .reset-row { text-align: center; padding: 18px 14px 0; }
+  .reset-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; color: var(--text-muted); background: none; border: 1px solid var(--border); border-radius: 20px; padding: 7px 20px; cursor: pointer; transition: all 0.2s; }
+  .reset-btn:hover { color: var(--text-mid); border-color: var(--blue-border); }
+</style>
+</head>
+<body>
+
+
+
+<div class="top-bar">
+  <div>
+    <span class="brand-c">C</span><span class="brand-rest">hantale's</span>
+    <span class="brand-lp"> Life Planner</span>
+  </div>
+  <div class="top-bar-right">
+    <div class="sync-dot" id="syncDot"></div>
+    <button class="edit-mode-btn" id="editToggle" onclick="toggleEditMode()">Edit</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="hero-line1" id="heroGreeting">Good evening,</span>
+  <span class="hero-name"><span class="name-c">C</span><span>hantale</span></span>
+  <div class="hero-sub" id="heroDate">Sunday, March 1, 2026</div>
+</div>
+
+<div class="summary-stats">
+  <div class="stat"><div class="stat-val" id="statDone">0</div><div class="stat-lbl">Done</div></div>
+  <div class="stat"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Total</div></div>
+  <div class="stat"><div class="stat-val" id="statPct">0%</div><div class="stat-lbl">Today</div></div>
+  <div class="stat"><div class="stat-val streak" id="statStreak">🔥 0</div><div class="stat-lbl">Day Streak</div></div>
+</div>
+
+<div class="section-row" style="margin-top:18px">
+  <div class="section-hd">Daily Log</div>
+</div>
+<div class="daily-log-wrap">
+  <div class="log-row">
+    <div class="log-icon">🚶</div>
+    <div class="log-info"><div class="log-label">Steps</div><div class="log-goal">Goal: 10,000</div></div>
+    <div class="log-input-wrap">
+      <input class="log-input" type="number" id="log-steps" placeholder="0" min="0" max="99999" oninput="saveLog(&#39;steps&#39;,this.value);checkGoal(&#39;steps&#39;,this.value,10000)">
+      <span class="log-unit">steps</span>
+      <div class="log-goal-hit" id="goal-steps">✓</div>
+    </div>
+  </div>
+  <div class="log-row">
+    <div class="log-icon">💧</div>
+    <div class="log-info"><div class="log-label">Water</div><div class="log-goal">Goal: 3 bottles</div></div>
+    <div class="log-input-wrap">
+      <input class="log-input" type="number" id="log-water" placeholder="0" min="0" max="10" step="0.5" oninput="saveLog(&#39;water_bottles&#39;,this.value);checkGoal(&#39;water&#39;,this.value,3)">
+      <span class="log-unit">bottles</span>
+      <div class="log-goal-hit" id="goal-water">✓</div>
+    </div>
+  </div>
+  <div class="log-row">
+    <div class="log-icon">🌾</div>
+    <div class="log-info"><div class="log-label">Fibre</div><div class="log-goal">Goal: 25–28g</div></div>
+    <div class="log-input-wrap">
+      <input class="log-input" type="number" id="log-fibre" placeholder="0" min="0" max="200" oninput="saveLog(&#39;fibre_g&#39;,this.value);checkGoal(&#39;fibre&#39;,this.value,25)">
+      <span class="log-unit">g</span>
+      <div class="log-goal-hit" id="goal-fibre">✓</div>
+    </div>
+  </div>
+  <div class="log-row">
+    <div class="log-icon">⚖️</div>
+    <div class="log-info"><div class="log-label">Weight</div><div class="log-goal">Daily check-in</div></div>
+    <div class="log-input-wrap">
+      <input class="log-input" type="number" id="log-weight" placeholder="0.0" min="0" max="999" step="0.1" oninput="saveLog(&#39;weight_lbs&#39;,this.value)">
+      <span class="log-unit">lbs</span>
+    </div>
+  </div>
+</div>
+
+<div id="appContent">
+    <div style="text-align:center;padding:40px 20px;color:var(--text-mid)">
+      <div style="font-size:32px;margin-bottom:12px">🔒</div>
+      <div style="font-size:15px;font-weight:500;margin-bottom:6px">Not signed in</div>
+      <div style="font-size:13px;color:var(--text-muted)">Please sign in to your Life Planner to use the habits tracker.</div>
+    </div></div>
+
+<div class="reset-row">
+  <button class="reset-btn" onclick="confirmReset()">↺ Reset Day</button>
+</div>
+<div style="height:36px"></div>
+
+<script>
+const SUPABASE_URL = 'https://sagtwgxxrfopqaskaxdy.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3R3Z3h4cmZvcHFhc2theGR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMjIyMzksImV4cCI6MjA4Nzg5ODIzOX0.Ch9pPhOoVU_FsOomxg2wQvK66wGAkP-ch1jFEK909Nw';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const TODAY = new Date().toISOString().split('T')[0];
+const SECTIONS = [
+  { key:'morning', label:'Morning' },
+  { key:'daytime', label:'Daytime' },
+  { key:'evening', label:'Evening' },
+];
+const DEFAULT_HABITS = [
+  { name:'Morning Breathing Exercise', note:'5×5×5 — 5 rounds',              time_label:'',     section:'morning', sort_order:0  },
+  { name:'Fasted Walk',                note:'',                               time_label:'',     section:'morning', sort_order:1  },
+  { name:'Meditation',                 note:'',                               time_label:'',     section:'morning', sort_order:2  },
+  { name:'10X Routine or Yoga',        note:'',                               time_label:'',     section:'morning', sort_order:3  },
+  { name:'Peaceful Warrior',           note:'Say your affirmation',           time_label:'',     section:'morning', sort_order:4  },
+  { name:'Supplements with Lunch',     note:'',                               time_label:'',     section:'daytime', sort_order:5  },
+  { name:'Walk After Lunch',           note:'',                               time_label:'',     section:'daytime', sort_order:6  },
+  { name:'Daily Planning',             note:'RPM — outcomes, purpose, actions',time_label:'',    section:'daytime', sort_order:7  },
+  { name:'Walk After Dinner',          note:'',                               time_label:'',     section:'daytime', sort_order:8  },
+  { name:'Stop Eating',                note:'3 hrs before bed',               time_label:'~7:00',section:'evening', sort_order:9  },
+  { name:'Red Glasses On',             note:'30 min before bed',              time_label:'~9:30',section:'evening', sort_order:10 },
+  { name:'Floss Teeth',                note:'',                               time_label:'',     section:'evening', sort_order:11 },
+  { name:'Nightly Face Cleansing',     note:'',                               time_label:'',     section:'evening', sort_order:12 },
+  { name:'Journal',                    note:'',                               time_label:'',     section:'evening', sort_order:13 },
+  { name:'Nighttime Breathing Exercise',note:'4-7-8 breathing',              time_label:'',     section:'evening', sort_order:14 },
+  { name:'Hypnotherapy',               note:'',                               time_label:'',     section:'evening', sort_order:15 },
+  { name:'Personal Power II',          note:'',                               time_label:'',     section:'evening', sort_order:16 },
+];
+
+let currentUser = null;
+let habits      = [];
+let doneIds     = new Set();
+let logData     = {};
+let editMode    = false;
+let dragSrc     = null;
+let logTimer    = null;
+
+// ── SYNC DOT ──────────────────────────────────────────────────────────────────
+function sync(state) { document.getElementById('syncDot').className = 'sync-dot ' + state; }
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+async function init() {
+  const now = new Date();
+  const h   = now.getHours();
+  document.getElementById('heroGreeting').textContent = h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('heroDate').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { hideLoading(); showAuthError(); return; }
+  currentUser = session.user;
+
+  await Promise.all([ loadHabits(), loadTodayCompletions(), loadTodayLog(), loadStreak() ]);
+  hideLoading();
+  render();
+}
+
+function hideLoading() {
+  const el = document.getElementById('loading');
+  el.classList.add('hidden');
+  setTimeout(() => el.remove(), 500);
+}
+
+function showAuthError() {
+  document.getElementById('appContent').innerHTML = `
+    <div style="text-align:center;padding:40px 20px;color:var(--text-mid)">
+      <div style="font-size:32px;margin-bottom:12px">🔒</div>
+      <div style="font-size:15px;font-weight:500;margin-bottom:6px">Not signed in</div>
+      <div style="font-size:13px;color:var(--text-muted)">Please sign in to your Life Planner to use the habits tracker.</div>
+    </div>`;
+}
+
+// ── LOAD ──────────────────────────────────────────────────────────────────────
+async function loadHabits() {
+  const { data, error } = await sb.from('habits').select('*').eq('user_id', currentUser.id).order('sort_order');
+  if (error) { console.error(error); return; }
+  if (!data || data.length === 0) await seedDefaultHabits();
+  else habits = data;
+}
+
+async function seedDefaultHabits() {
+  const rows = DEFAULT_HABITS.map(h => ({ ...h, user_id: currentUser.id }));
+  const { data, error } = await sb.from('habits').insert(rows).select();
+  if (error) { console.error(error); return; }
+  habits = data;
+}
+
+async function loadTodayCompletions() {
+  const { data, error } = await sb.from('habit_completions').select('habit_id').eq('user_id', currentUser.id).eq('completed_date', TODAY);
+  if (error) { console.error(error); return; }
+  doneIds = new Set((data || []).map(r => r.habit_id));
+}
+
+async function loadTodayLog() {
+  const { data, error } = await sb.from('daily_log').select('*').eq('user_id', currentUser.id).eq('log_date', TODAY).maybeSingle();
+  if (error) { console.error(error); return; }
+  logData = data || {};
+  const map = { steps:'log-steps', water_bottles:'log-water', fibre_g:'log-fibre', weight_lbs:'log-weight' };
+  const goals = { steps:10000, water_bottles:3, fibre_g:25 };
+  const goalKey = { steps:'steps', water_bottles:'water', fibre_g:'fibre' };
+  Object.entries(map).forEach(([k, elId]) => {
+    const el = document.getElementById(elId);
+    if (logData[k] != null) {
+      el.value = logData[k];
+      if (goals[k]) checkGoal(goalKey[k], logData[k], goals[k]);
+    }
+  });
+}
+
+async function loadStreak() {
+  const { data } = await sb.from('streaks').select('current_streak').eq('user_id', currentUser.id).maybeSingle();
+  document.getElementById('statStreak').textContent = '🔥 ' + (data?.current_streak || 0);
+}
+
+// ── TOGGLE ────────────────────────────────────────────────────────────────────
+async function toggleDone(habitId) {
+  const isDone = doneIds.has(habitId);
+  sync('syncing');
+  if (isDone) {
+    doneIds.delete(habitId);
+    render();
+    await sb.from('habit_completions').delete().eq('user_id', currentUser.id).eq('habit_id', habitId).eq('completed_date', TODAY);
+  } else {
+    doneIds.add(habitId);
+    render();
+    await sb.from('habit_completions').upsert({ user_id: currentUser.id, habit_id: habitId, completed_date: TODAY });
+    if (doneIds.size >= habits.length) await updateStreak();
+  }
+  sync('synced');
+}
+
+async function updateStreak() {
+  const { data: ex } = await sb.from('streaks').select('*').eq('user_id', currentUser.id).maybeSingle();
+  if (ex?.last_completed_date === TODAY) return;
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+  const yStr = yesterday.toISOString().split('T')[0];
+  let cur  = ex?.last_completed_date === yStr ? (ex.current_streak || 0) + 1 : 1;
+  let best = Math.max(cur, ex?.best_streak || 0);
+  await sb.from('streaks').upsert({ user_id: currentUser.id, current_streak: cur, best_streak: best, last_completed_date: TODAY, updated_at: new Date().toISOString() });
+  document.getElementById('statStreak').textContent = '🔥 ' + cur;
+}
+
+// ── LOG ───────────────────────────────────────────────────────────────────────
+function saveLog(field, value) {
+  logData[field] = value === '' ? null : parseFloat(value);
+  clearTimeout(logTimer);
+  sync('syncing');
+  logTimer = setTimeout(async () => {
+    const payload = { user_id: currentUser.id, log_date: TODAY, steps: logData.steps ?? null, water_bottles: logData.water_bottles ?? null, fibre_g: logData.fibre_g ?? null, weight_lbs: logData.weight_lbs ?? null, updated_at: new Date().toISOString() };
+    const { error } = await sb.from('daily_log').upsert(payload, { onConflict: 'user_id,log_date' });
+    sync(error ? 'error' : 'synced');
+  }, 800);
+}
+
+function checkGoal(key, value, goal) {
+  const el = document.getElementById('goal-' + key);
+  if (!el) return;
+  parseFloat(value) >= goal ? el.classList.add('show') : el.classList.remove('show');
+}
+
+// ── HABIT CRUD ────────────────────────────────────────────────────────────────
+async function addHabit(section, input) {
+  const name = input.value.trim();
+  if (!name) return;
+  sync('syncing');
+  const maxOrder = habits.filter(h => h.section === section).reduce((m,h) => Math.max(m, h.sort_order), 0);
+  const { data, error } = await sb.from('habits').insert({ user_id: currentUser.id, name, note: '', time_label: '', section, sort_order: maxOrder + 1 }).select().single();
+  if (error) { sync('error'); return; }
+  habits.push(data);
+  input.value = '';
+  sync('synced');
+  render();
+}
+
+async function deleteHabit(id) {
+  sync('syncing');
+  habits = habits.filter(h => h.id !== id);
+  doneIds.delete(id);
+  render();
+  await sb.from('habits').delete().eq('id', id).eq('user_id', currentUser.id);
+  sync('synced');
+}
+
+async function saveHabitEdit(id, name, note) {
+  sync('syncing');
+  const h = habits.find(h => h.id === id);
+  if (h) { h.name = name; h.note = note; }
+  await sb.from('habits').update({ name, note }).eq('id', id).eq('user_id', currentUser.id);
+  sync('synced');
+  render();
+}
+
+async function moveSection(id, section) {
+  sync('syncing');
+  const h = habits.find(h => h.id === id);
+  if (h) h.section = section;
+  render();
+  await sb.from('habits').update({ section }).eq('id', id).eq('user_id', currentUser.id);
+  sync('synced');
+}
+
+async function saveOrder() {
+  await Promise.all(habits.map((h, i) => sb.from('habits').update({ sort_order: i }).eq('id', h.id).eq('user_id', currentUser.id)));
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  const content = document.getElementById('appContent');
+  content.innerHTML = '';
+  editMode ? content.classList.add('edit-mode') : content.classList.remove('edit-mode');
+
+  SECTIONS.forEach(sec => {
+    const sh = habits.filter(h => h.section === sec.key);
+    const sd = sh.filter(h => doneIds.has(h.id)).length;
+    const row = document.createElement('div');
+    row.className = 'section-row';
+    row.innerHTML = `<div class="section-hd">${sec.label}</div><div class="section-count-badge">${sd} / ${sh.length}</div>`;
+    content.appendChild(row);
+    const wrap = document.createElement('div');
+    wrap.className = 'habits-wrap';
+    sh.forEach(h => wrap.appendChild(makeRow(h)));
+    content.appendChild(wrap);
+    content.appendChild(makeAddBar(sec.key));
+  });
+
+  const ad = document.createElement('div');
+  ad.className = 'all-done-msg' + (habits.length > 0 && doneIds.size >= habits.length ? ' show' : '');
+  ad.textContent = '🎉 Outstanding! Every habit complete today!';
+  content.appendChild(ad);
+  updateStats();
+}
+
+function makeRow(habit) {
+  const isDone = doneIds.has(habit.id);
+  const row = document.createElement('div');
+  row.className = 'habit-row' + (isDone ? ' done' : '');
+  row.draggable = editMode;
+  row.dataset.id = habit.id;
+
+  const handle = document.createElement('div'); handle.className = 'drag-handle'; handle.textContent = '⠿';
+  const check  = document.createElement('button'); check.className = 'habit-check-btn' + (isDone ? ' done' : ''); check.textContent = '✓'; check.onclick = () => toggleDone(habit.id);
+  const info   = document.createElement('div'); info.className = 'habit-info';
+  info.innerHTML = `<div class="habit-label">${habit.name}</div>` + (habit.note ? `<div class="habit-note-text">${habit.note}</div>` : '');
+  const time = document.createElement('div'); time.className = 'habit-time-lbl'; time.textContent = habit.time_label || '';
+
+  const sel = document.createElement('select'); sel.className = 'section-move-select';
+  SECTIONS.forEach(s => { const o = document.createElement('option'); o.value = s.key; o.textContent = s.label; if (s.key === habit.section) o.selected = true; sel.appendChild(o); });
+  sel.addEventListener('change', () => moveSection(habit.id, sel.value));
+
+  const actions = document.createElement('div'); actions.className = 'habit-actions';
+  const eb = document.createElement('button'); eb.className = 'action-btn edit-btn'; eb.innerHTML = '✎'; eb.onclick = () => startEdit(habit.id, row);
+  const db = document.createElement('button'); db.className = 'action-btn del-btn';  db.innerHTML = '✕'; db.onclick = () => deleteHabit(habit.id);
+  actions.appendChild(eb); actions.appendChild(db);
+
+  row.appendChild(handle); row.appendChild(check); row.appendChild(info); row.appendChild(time); row.appendChild(sel); row.appendChild(actions);
+
+  row.addEventListener('dragstart', e => { dragSrc = row; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+  row.addEventListener('dragend',   () => { row.classList.remove('dragging'); document.querySelectorAll('.drag-over').forEach(r => r.classList.remove('drag-over')); });
+  row.addEventListener('dragover',  e => { e.preventDefault(); if (dragSrc !== row) row.classList.add('drag-over'); });
+  row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+  row.addEventListener('drop', async e => {
+    e.preventDefault(); row.classList.remove('drag-over');
+    if (!dragSrc || dragSrc === row) return;
+    const si = habits.findIndex(h => h.id === dragSrc.dataset.id);
+    const di = habits.findIndex(h => h.id === row.dataset.id);
+    const moved = habits.splice(si, 1)[0];
+    const ni = habits.findIndex(h => h.id === row.dataset.id);
+    moved.section = habits[ni]?.section || moved.section;
+    habits.splice(ni, 0, moved);
+    render(); await saveOrder();
+  });
+  return row;
+}
+
+function makeAddBar(section) {
+  const bar = document.createElement('div'); bar.className = 'add-habit-bar';
+  const inp = document.createElement('input'); inp.className = 'add-habit-input'; inp.type = 'text'; inp.placeholder = `Add habit to ${section}…`;
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') addHabit(section, inp); });
+  const btn = document.createElement('button'); btn.className = 'add-confirm-btn'; btn.textContent = '+'; btn.onclick = () => addHabit(section, inp);
+  bar.appendChild(inp); bar.appendChild(btn);
+  return bar;
+}
+
+function startEdit(id, row) {
+  const habit = habits.find(h => h.id === id);
+  const info  = row.querySelector('.habit-info');
+  info.innerHTML = '';
+  const ni = document.createElement('input'); ni.className = 'habit-edit-input'; ni.value = habit.name;
+  const no = document.createElement('input'); no.className = 'habit-note-input'; no.value = habit.note; no.placeholder = 'Note (optional)';
+  function save() { const n = ni.value.trim(); if (n) saveHabitEdit(id, n, no.value.trim()); }
+  ni.addEventListener('keydown', e => { if (e.key === 'Enter') no.focus(); });
+  no.addEventListener('keydown', e => { if (e.key === 'Enter') save(); });
+  ni.addEventListener('blur', () => setTimeout(() => { if (!no.matches(':focus')) save(); }, 150));
+  no.addEventListener('blur', () => setTimeout(() => { if (!ni.matches(':focus')) save(); }, 150));
+  info.appendChild(ni); info.appendChild(no);
+  ni.focus(); ni.select();
+}
+
+function toggleEditMode() {
+  editMode = !editMode;
+  document.getElementById('editToggle').textContent = editMode ? 'Done' : 'Edit';
+  render();
+}
+
+async function confirmReset() {
+  if (!confirm("Reset today's check-ins and log?")) return;
+  sync('syncing');
+  doneIds.clear(); logData = {};
+  ['log-steps','log-water','log-fibre','log-weight'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['goal-steps','goal-water','goal-fibre'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('show'); });
+  await Promise.all([
+    sb.from('habit_completions').delete().eq('user_id', currentUser.id).eq('completed_date', TODAY),
+    sb.from('daily_log').delete().eq('user_id', currentUser.id).eq('log_date', TODAY),
+  ]);
+  sync('synced'); render();
+}
+
+function updateStats() {
+  const total = habits.length, done = doneIds.size;
+  document.getElementById('statDone').textContent  = done;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPct').textContent   = total ? Math.round(done/total*100)+'%' : '0%';
+}
+
+window.addEventListener('load', init);
+</script>
+
+
+</body></html>
