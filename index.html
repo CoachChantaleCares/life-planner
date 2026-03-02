@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Life Planner" />
+<!-- saved from url=(0045)file:///Users/Chantale/Downloads/index_1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Life Planner">
   <title>Chantale's Life Planner</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Italianno&display=swap" rel="stylesheet" />
+  <link href="./index_files/css2" rel="stylesheet">
   <style>
     :root {
       --blue-dark:  #1a5a8a;
@@ -230,17 +230,14 @@
 <body>
 
 <!-- LOADING -->
-<div class="loading-overlay" id="loading">
-  <div class="loading-title">Life Planner</div>
-  <div class="loading-bar"></div>
-</div>
+
 
 <!-- LOGIN -->
-<div class="screen" id="login-screen">
+<div class="screen active" id="login-screen">
   <div class="login-box">
     <div class="login-logo">
       <div>
-        <span style="font-family:'Italianno',cursive;font-size:42px;color:var(--blue-dark);line-height:1">C</span><span style="font-family:'Great Vibes',cursive;font-size:32px;color:var(--blue-dark);letter-spacing:2px">hantale's </span><span style="font-family:'Great Vibes',cursive;font-size:36px;color:var(--blue);letter-spacing:2px">Life Planner</span>
+        <span style="font-family:&#39;Italianno&#39;,cursive;font-size:42px;color:var(--blue-dark);line-height:1">C</span><span style="font-family:&#39;Great Vibes&#39;,cursive;font-size:32px;color:var(--blue-dark);letter-spacing:2px">hantale's </span><span style="font-family:&#39;Great Vibes&#39;,cursive;font-size:36px;color:var(--blue);letter-spacing:2px">Life Planner</span>
       </div>
       <span class="login-logo-sub">Results · Purpose · Massive Action</span>
     </div>
@@ -248,8 +245,8 @@
     <div id="login-form">
       <div class="login-heading">Welcome back</div>
       <p class="login-sub">Sign in to continue your journey.</p>
-      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="login-email" placeholder="you@example.com" autocomplete="email" /></div>
-      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="login-password" placeholder="••••••••" autocomplete="current-password" /></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="login-email" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
       <div class="error-msg" id="login-error"></div>
       <button class="btn-primary" id="login-btn" onclick="handleLogin()">Sign In</button>
       <div class="auth-toggle">No account? <a onclick="showSignup()">Create one</a></div>
@@ -258,9 +255,9 @@
     <div id="signup-form" style="display:none">
       <div class="login-heading">Create account</div>
       <p class="login-sub">Start planning with intention.</p>
-      <div class="form-group"><label class="form-label">Your Name</label><input type="text" class="form-input" id="signup-name" placeholder="Chantale" autocomplete="given-name" /></div>
-      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signup-email" placeholder="you@example.com" autocomplete="email" /></div>
-      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signup-password" placeholder="Min. 6 characters" autocomplete="new-password" /></div>
+      <div class="form-group"><label class="form-label">Your Name</label><input type="text" class="form-input" id="signup-name" placeholder="Chantale" autocomplete="given-name"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signup-email" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signup-password" placeholder="Min. 6 characters" autocomplete="new-password"></div>
       <div class="error-msg" id="signup-error"></div>
       <div class="success-msg" id="signup-success"></div>
       <button class="btn-primary" id="signup-btn" onclick="handleSignup()">Create Account</button>
@@ -295,7 +292,7 @@
       </div>
       <div class="section-row">
         <div class="section-hd">Today's RPM Blocks</div>
-        <button class="section-action" onclick="switchView('daily')">View All →</button>
+        <button class="section-action" onclick="switchView(&#39;daily&#39;)">View All →</button>
       </div>
       <div class="content-pad" id="today-blocks-preview">
         <div class="empty-state">
@@ -307,7 +304,7 @@
       </div>
       <div class="section-row">
         <div class="section-hd">Daily Habits</div>
-        <button class="section-action" onclick="switchView('habits')">Track →</button>
+        <button class="section-action" onclick="switchView(&#39;habits&#39;)">Track →</button>
       </div>
       <div id="today-habits-preview">
         <div class="empty-state">
@@ -323,7 +320,7 @@
       <div class="coming-soon">
         <div class="coming-soon-icon">📋</div>
         <div class="coming-soon-title">Daily RPM Plan</div>
-        <div class="coming-soon-sub">Full RPM block builder with<br>Result · Purpose · MAP · Status<br>Daily energy & nutrition tracker</div>
+        <div class="coming-soon-sub">Full RPM block builder with<br>Result · Purpose · MAP · Status<br>Daily energy &amp; nutrition tracker</div>
         <div class="coming-soon-tag">Coming in Session 2</div>
       </div>
     </div>
@@ -364,43 +361,7 @@
           <button class="section-action" id="h-edit-btn" onclick="toggleHabitEditMode()">Edit</button>
         </div>
       </div>
-      <div class="habits-wrap" style="margin:0 14px">
-        <div class="log-row">
-          <div class="log-icon">🚶</div>
-          <div class="log-info"><div class="log-label">Steps</div><div class="log-goal-text">Goal: 10,000</div></div>
-          <div class="log-input-wrap">
-            <input class="log-input" type="number" id="log-steps" placeholder="0" min="0" max="99999" oninput="saveLog('steps',this.value);checkGoal('steps',this.value,10000)" />
-            <span class="log-unit">steps</span>
-            <div class="log-goal-hit" id="goal-steps">✓</div>
-          </div>
-        </div>
-        <div class="log-row">
-          <div class="log-icon">💧</div>
-          <div class="log-info"><div class="log-label">Water</div><div class="log-goal-text">Goal: 3 bottles</div></div>
-          <div class="log-input-wrap">
-            <input class="log-input" type="number" id="log-water" placeholder="0" min="0" max="10" step="0.5" oninput="saveLog('water_bottles',this.value);checkGoal('water',this.value,3)" />
-            <span class="log-unit">bottles</span>
-            <div class="log-goal-hit" id="goal-water">✓</div>
-          </div>
-        </div>
-        <div class="log-row">
-          <div class="log-icon">🌾</div>
-          <div class="log-info"><div class="log-label">Fibre</div><div class="log-goal-text">Goal: 25–28g</div></div>
-          <div class="log-input-wrap">
-            <input class="log-input" type="number" id="log-fibre" placeholder="0" min="0" max="200" oninput="saveLog('fibre_g',this.value);checkGoal('fibre',this.value,25)" />
-            <span class="log-unit">g</span>
-            <div class="log-goal-hit" id="goal-fibre">✓</div>
-          </div>
-        </div>
-        <div class="log-row" style="border-bottom:none">
-          <div class="log-icon">⚖️</div>
-          <div class="log-info"><div class="log-label">Weight</div><div class="log-goal-text">Daily check-in</div></div>
-          <div class="log-input-wrap">
-            <input class="log-input" type="number" id="log-weight" placeholder="0.0" min="0" max="999" step="0.1" oninput="saveLog('weight_lbs',this.value)" />
-            <span class="log-unit">lbs</span>
-          </div>
-        </div>
-      </div>
+      <div id="log-content"></div>
 
       <!-- AREA 3 — HABIT CHECKLIST -->
       <div id="habits-content"></div>
@@ -425,7 +386,7 @@
         <div class="profile-email-display" id="profile-email">—</div>
       </div>
       <div class="profile-section">
-        <div class="settings-item"><span class="settings-item-label">📖 My Vision & Purpose</span><span class="settings-item-arrow">›</span></div>
+        <div class="settings-item"><span class="settings-item-label">📖 My Vision &amp; Purpose</span><span class="settings-item-arrow">›</span></div>
         <div class="settings-item"><span class="settings-item-label">⚙️ Manage Habits</span><span class="settings-item-arrow">›</span></div>
         <div class="settings-item"><span class="settings-item-label">📤 Export to iCal</span><span class="settings-item-arrow">›</span></div>
         <div class="settings-item"><span class="settings-item-label">🔔 Notification Shortcuts</span><span class="settings-item-arrow">›</span></div>
@@ -436,12 +397,12 @@
   </div>
 
   <nav class="bottom-nav">
-    <button class="nav-item active" id="nav-today" onclick="switchView('today')"><span class="nav-icon">◈</span><span class="nav-label">Today</span></button>
-    <button class="nav-item" id="nav-daily" onclick="switchView('daily')"><span class="nav-icon">▦</span><span class="nav-label">Daily</span></button>
-    <button class="nav-item" id="nav-weekly" onclick="switchView('weekly')"><span class="nav-icon">◫</span><span class="nav-label">Weekly</span></button>
-    <button class="nav-item" id="nav-habits" onclick="switchView('habits')"><span class="nav-icon">◉</span><span class="nav-label">Habits</span></button>
-    <button class="nav-item" id="nav-categories" onclick="switchView('categories')"><span class="nav-icon">◧</span><span class="nav-label">Life Areas</span></button>
-    <button class="nav-item" id="nav-profile" onclick="switchView('profile')"><span class="nav-icon">◎</span><span class="nav-label">Profile</span></button>
+    <button class="nav-item active" id="nav-today" onclick="switchView(&#39;today&#39;)"><span class="nav-icon">◈</span><span class="nav-label">Today</span></button>
+    <button class="nav-item" id="nav-daily" onclick="switchView(&#39;daily&#39;)"><span class="nav-icon">▦</span><span class="nav-label">Daily</span></button>
+    <button class="nav-item" id="nav-weekly" onclick="switchView(&#39;weekly&#39;)"><span class="nav-icon">◫</span><span class="nav-label">Weekly</span></button>
+    <button class="nav-item" id="nav-habits" onclick="switchView(&#39;habits&#39;)"><span class="nav-icon">◉</span><span class="nav-label">Habits</span></button>
+    <button class="nav-item" id="nav-categories" onclick="switchView(&#39;categories&#39;)"><span class="nav-icon">◧</span><span class="nav-label">Life Areas</span></button>
+    <button class="nav-item" id="nav-profile" onclick="switchView(&#39;profile&#39;)"><span class="nav-icon">◎</span><span class="nav-label">Profile</span></button>
   </nav>
 
 </div>
@@ -458,11 +419,11 @@
       <strong>Massive Action Plan</strong> — How do I achieve it?<br>
       <strong>Category, Duration, Priority, Status</strong>
     </p>
-    <button class="btn-primary" style="margin-top:24px" onclick="document.getElementById('add-modal').classList.remove('open')">Got it</button>
+    <button class="btn-primary" style="margin-top:24px" onclick="document.getElementById(&#39;add-modal&#39;).classList.remove(&#39;open&#39;)">Got it</button>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./index_files/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://sagtwgxxrfopqaskaxdy.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3R3Z3h4cmZvcHFhc2theGR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMjIyMzksImV4cCI6MjA4Nzg5ODIzOX0.Ch9pPhOoVU_FsOomxg2wQvK66wGAkP-ch1jFEK909Nw';
@@ -629,8 +590,20 @@ let hDone     = new Set();
 let hLog      = {};
 let hEditMode = false;
 let hDragSrc  = null;
+let hLogDragSrc = null;
 let hLogTimer = null;
 let hLoaded   = false;
+
+// Daily log items — stored in localStorage, editable by user
+const LOG_DEFS_KEY = 'lp_log_defs';
+const LOG_DEFAULTS = [
+  { id:'l1', icon:'🚶', label:'Steps',  unit:'steps', goalNum:7000,  field:'steps',         hasGoal:true  },
+  { id:'l2', icon:'💧', label:'Water',  unit:'bottles',goalNum:3,    field:'water_bottles', hasGoal:true  },
+  { id:'l3', icon:'🌾', label:'Fibre',  unit:'g',      goalNum:25,   field:'fibre_g',       hasGoal:true  },
+  { id:'l4', icon:'⚖️', label:'Weight', unit:'lbs',    goalNum:null,  field:'weight_lbs',   hasGoal:false },
+];
+let logDefs = JSON.parse(localStorage.getItem(LOG_DEFS_KEY) || 'null') || JSON.parse(JSON.stringify(LOG_DEFAULTS));
+function saveLogDefs() { localStorage.setItem(LOG_DEFS_KEY, JSON.stringify(logDefs)); }
 
 function hSync(state) { const d = document.getElementById('h-sync-dot'); if (d) d.className = 'sync-dot ' + state; }
 
@@ -653,6 +626,7 @@ async function loadHabitsTab() {
   if (dateEl) dateEl.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
   await Promise.all([ hLoadHabits(), hLoadCompletions(), hLoadLog(), hLoadStreak() ]);
+  lRender();
   hRender();
 }
 
@@ -677,13 +651,120 @@ async function hLoadCompletions() {
 async function hLoadLog() {
   const { data } = await sb.from('daily_log').select('*').eq('user_id', currentUser.id).eq('log_date', H_TODAY).maybeSingle();
   hLog = data || {};
-  const map   = { steps:'log-steps', water_bottles:'log-water', fibre_g:'log-fibre', weight_lbs:'log-weight' };
-  const goals = { steps:10000, water_bottles:3, fibre_g:25 };
-  const gkeys = { steps:'steps', water_bottles:'water', fibre_g:'fibre' };
-  Object.entries(map).forEach(([k, elId]) => {
-    const el = document.getElementById(elId);
-    if (el && hLog[k] != null) { el.value = hLog[k]; if (goals[k]) checkGoal(gkeys[k], hLog[k], goals[k]); }
+}
+
+function lRender() {
+  const wrap = document.getElementById('log-content');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'habits-wrap'; card.style.margin = '0 14px';
+  if (hEditMode) card.classList.add('h-edit-mode');
+
+  logDefs.forEach((def, idx) => {
+    const row = document.createElement('div');
+    row.className = 'log-row'; row.style.borderBottom = idx === logDefs.length-1 ? 'none' : '';
+    row.dataset.id = def.id;
+    row.draggable = hEditMode;
+
+    if (hEditMode) {
+      // EDIT MODE — show drag handle, edit/delete, no input
+      const handle = document.createElement('div'); handle.className = 'h-drag-handle'; handle.textContent = '⠿'; handle.style.display='flex';
+      
+      const info = document.createElement('div'); info.className = 'h-habit-info';
+      info.innerHTML = `<div class="h-habit-label">${def.icon} ${def.label}</div><div class="h-habit-note">${def.hasGoal ? 'Goal: '+def.goalNum+' '+def.unit : def.unit}</div>`;
+
+      const actions = document.createElement('div'); actions.className = 'h-habit-actions'; actions.style.display='flex';
+      const eb = document.createElement('button'); eb.className = 'h-action-btn h-edit-action'; eb.innerHTML = '✎'; eb.onclick = () => lStartEdit(def.id, row);
+      const db = document.createElement('button'); db.className = 'h-action-btn h-del-action';  db.innerHTML = '✕'; db.onclick = () => { logDefs = logDefs.filter(d => d.id !== def.id); saveLogDefs(); lRender(); };
+      actions.appendChild(eb); actions.appendChild(db);
+
+      row.appendChild(handle); row.appendChild(info); row.appendChild(actions);
+
+      // Drag for log rows
+      row.addEventListener('dragstart', e => { hLogDragSrc = row; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+      row.addEventListener('dragend',   () => { row.classList.remove('dragging'); card.querySelectorAll('.drag-over').forEach(r=>r.classList.remove('drag-over')); });
+      row.addEventListener('dragover',  e => { e.preventDefault(); if (hLogDragSrc!==row) row.classList.add('drag-over'); });
+      row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+      row.addEventListener('drop', e => {
+        e.preventDefault(); row.classList.remove('drag-over');
+        if (!hLogDragSrc || hLogDragSrc===row) return;
+        const si = logDefs.findIndex(d => d.id===hLogDragSrc.dataset.id);
+        const di = logDefs.findIndex(d => d.id===row.dataset.id);
+        const moved = logDefs.splice(si,1)[0];
+        const ni = logDefs.findIndex(d => d.id===row.dataset.id);
+        logDefs.splice(ni,0,moved);
+        saveLogDefs(); lRender();
+      });
+    } else {
+      // NORMAL MODE — icon, label/goal, input
+      const icon = document.createElement('div'); icon.className = 'log-icon'; icon.textContent = def.icon;
+      const info = document.createElement('div'); info.className = 'log-info';
+      info.innerHTML = `<div class="log-label">${def.label}</div><div class="log-goal-text">${def.hasGoal ? 'Goal: '+def.goalNum.toLocaleString()+' '+def.unit : 'Daily check-in'}</div>`;
+      const inputWrap = document.createElement('div'); inputWrap.className = 'log-input-wrap';
+      const inp = document.createElement('input');
+      inp.className = 'log-input'; inp.type = 'number'; inp.placeholder = '0';
+      inp.min = '0'; inp.step = def.unit === 'bottles' ? '0.5' : def.unit === 'lbs' ? '0.1' : '1';
+      if (hLog[def.field] != null) inp.value = hLog[def.field];
+      inp.oninput = () => { saveLog(def.field, inp.value); if (def.hasGoal) checkGoalById(def.id, inp.value, def.goalNum); };
+      const unit = document.createElement('span'); unit.className = 'log-unit'; unit.textContent = def.unit;
+      inputWrap.appendChild(inp); inputWrap.appendChild(unit);
+      if (def.hasGoal) {
+        const hit = document.createElement('div'); hit.className = 'log-goal-hit'; hit.id = 'goal-'+def.id; hit.textContent = '✓';
+        if (hLog[def.field] != null && parseFloat(hLog[def.field]) >= def.goalNum) hit.classList.add('show');
+        inputWrap.appendChild(hit);
+      }
+      row.appendChild(icon); row.appendChild(info); row.appendChild(inputWrap);
+    }
+    card.appendChild(row);
   });
+
+  // Add new log item button in edit mode
+  if (hEditMode) {
+    const addBar = document.createElement('div'); addBar.className = 'h-add-bar';
+    const inp = document.createElement('input'); inp.className = 'h-add-input'; inp.type='text'; inp.placeholder = 'Add log item (e.g. Sleep Score)…';
+    const btn = document.createElement('button'); btn.className = 'h-add-btn'; btn.textContent = '+';
+    btn.onclick = () => {
+      const name = inp.value.trim(); if (!name) return;
+      const newDef = { id:'l'+Date.now(), icon:'📊', label:name, unit:'', goalNum:null, field:'custom_'+Date.now(), hasGoal:false };
+      logDefs.push(newDef); saveLogDefs(); inp.value=''; lRender();
+    };
+    addBar.appendChild(inp); addBar.appendChild(btn);
+    wrap.appendChild(card); wrap.appendChild(addBar);
+    return;
+  }
+  wrap.appendChild(card);
+}
+
+function lStartEdit(id, row) {
+  const def = logDefs.find(d => d.id === id);
+  const info = row.querySelector('.h-habit-info');
+  info.innerHTML = '';
+  const labelIn = document.createElement('input'); labelIn.className = 'h-habit-edit-input'; labelIn.value = def.icon+' '+def.label; labelIn.placeholder='Icon + Label (e.g. 🚶 Steps)';
+  const goalIn  = document.createElement('input'); goalIn.className  = 'h-habit-note-input';  goalIn.value = def.hasGoal ? def.goalNum : ''; goalIn.placeholder='Goal number (leave blank for no goal)';
+  const unitIn  = document.createElement('input'); unitIn.className  = 'h-habit-note-input';  unitIn.value = def.unit; unitIn.placeholder='Unit (e.g. steps, g, lbs)'; unitIn.style.marginTop='4px';
+  function save() {
+    const parts = labelIn.value.trim().split(' ');
+    def.icon  = parts[0] || def.icon;
+    def.label = parts.slice(1).join(' ') || def.label;
+    def.unit  = unitIn.value.trim() || def.unit;
+    const g = parseFloat(goalIn.value);
+    def.hasGoal = !isNaN(g) && g > 0;
+    def.goalNum = def.hasGoal ? g : null;
+    saveLogDefs(); lRender();
+  }
+  labelIn.addEventListener('keydown', e => { if (e.key==='Enter') goalIn.focus(); });
+  goalIn.addEventListener('keydown',  e => { if (e.key==='Enter') unitIn.focus(); });
+  unitIn.addEventListener('keydown',  e => { if (e.key==='Enter') save(); });
+  unitIn.addEventListener('blur', () => setTimeout(save, 150));
+  info.appendChild(labelIn); info.appendChild(goalIn); info.appendChild(unitIn);
+  labelIn.focus(); labelIn.select();
+}
+
+function checkGoalById(id, value, goal) {
+  const el = document.getElementById('goal-'+id);
+  if (!el) return;
+  parseFloat(value) >= goal ? el.classList.add('show') : el.classList.remove('show');
 }
 
 async function hLoadStreak() {
@@ -723,16 +804,17 @@ function saveLog(field, value) {
   clearTimeout(hLogTimer);
   hSync('syncing');
   hLogTimer = setTimeout(async () => {
-    const payload = { user_id: currentUser.id, log_date: H_TODAY, steps: hLog.steps ?? null, water_bottles: hLog.water_bottles ?? null, fibre_g: hLog.fibre_g ?? null, weight_lbs: hLog.weight_lbs ?? null, updated_at: new Date().toISOString() };
+    // Build payload from all current logDefs fields
+    const payload = { user_id: currentUser.id, log_date: H_TODAY, updated_at: new Date().toISOString() };
+    logDefs.forEach(d => { payload[d.field] = hLog[d.field] ?? null; });
+    // Always include standard fields for Supabase schema compatibility
+    payload.steps         = hLog.steps ?? null;
+    payload.water_bottles = hLog.water_bottles ?? null;
+    payload.fibre_g       = hLog.fibre_g ?? null;
+    payload.weight_lbs    = hLog.weight_lbs ?? null;
     const { error } = await sb.from('daily_log').upsert(payload, { onConflict: 'user_id,log_date' });
     hSync(error ? 'error' : 'synced');
   }, 800);
-}
-
-function checkGoal(key, value, goal) {
-  const el = document.getElementById('goal-' + key);
-  if (!el) return;
-  parseFloat(value) >= goal ? el.classList.add('show') : el.classList.remove('show');
 }
 
 async function hAddHabit(section, input) {
@@ -754,7 +836,7 @@ async function hSaveEdit(id, name, note) {
   hSync('syncing');
   const h = hHabits.find(h => h.id === id); if (h) { h.name = name; h.note = note; }
   await sb.from('habits').update({ name, note }).eq('id', id).eq('user_id', currentUser.id);
-  hSync('synced'); hRender();
+  hSync('synced'); lRender(); hRender();
 }
 
 async function hMoveSection(id, section) {
@@ -865,6 +947,7 @@ function toggleHabitEditMode() {
   hEditMode = !hEditMode;
   const btn = document.getElementById('h-edit-btn');
   if (btn) btn.textContent = hEditMode ? 'Done' : 'Edit';
+  lRender();
   hRender();
 }
 
@@ -896,5 +979,6 @@ window.switchView = function(view) {
 
 window.addEventListener('load', init);
 </script>
-</body>
-</html>
+
+
+</body></html>
