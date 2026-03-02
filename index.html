@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///Users/Chantale/Downloads/index_1.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Life Planner">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Life Planner" />
   <title>Chantale's Life Planner</title>
-  <link href="./index_files/css2" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Italianno&display=swap" rel="stylesheet" />
   <style>
     :root {
       --blue-dark:  #1a5a8a;
@@ -226,19 +226,22 @@
     .h-edit-mode .h-habit-time    { display:none; }
     .h-edit-mode .h-section-move  { display:block; }
   </style>
-  <script src="./index_files/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
 <!-- LOADING -->
-
+<div class="loading-overlay" id="loading">
+  <div class="loading-title">Life Planner</div>
+  <div class="loading-bar"></div>
+</div>
 
 <!-- LOGIN -->
-<div class="screen active" id="login-screen">
+<div class="screen" id="login-screen">
   <div class="login-box">
     <div class="login-logo">
       <div>
-        <span style="font-family:&#39;Italianno&#39;,cursive;font-size:42px;color:var(--blue-dark);line-height:1">C</span><span style="font-family:&#39;Great Vibes&#39;,cursive;font-size:32px;color:var(--blue-dark);letter-spacing:2px">hantale's </span><span style="font-family:&#39;Great Vibes&#39;,cursive;font-size:36px;color:var(--blue);letter-spacing:2px">Life Planner</span>
+        <span style="font-family:'Italianno',cursive;font-size:42px;color:var(--blue-dark);line-height:1">C</span><span style="font-family:'Great Vibes',cursive;font-size:32px;color:var(--blue-dark);letter-spacing:2px">hantale's </span><span style="font-family:'Great Vibes',cursive;font-size:36px;color:var(--blue);letter-spacing:2px">Life Planner</span>
       </div>
       <span class="login-logo-sub">Results · Purpose · Massive Action</span>
     </div>
@@ -246,8 +249,8 @@
     <div id="login-form">
       <div class="login-heading">Welcome back</div>
       <p class="login-sub">Sign in to continue your journey.</p>
-      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="login-email" placeholder="you@example.com" autocomplete="email"></div>
-      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="login-email" placeholder="you@example.com" autocomplete="email" /></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="login-password" placeholder="••••••••" autocomplete="current-password" /></div>
       <div class="error-msg" id="login-error"></div>
       <button class="btn-primary" id="login-btn" onclick="handleLogin()">Sign In</button>
       <div class="auth-toggle">No account? <a onclick="showSignup()">Create one</a></div>
@@ -256,9 +259,9 @@
     <div id="signup-form" style="display:none">
       <div class="login-heading">Create account</div>
       <p class="login-sub">Start planning with intention.</p>
-      <div class="form-group"><label class="form-label">Your Name</label><input type="text" class="form-input" id="signup-name" placeholder="Chantale" autocomplete="given-name"></div>
-      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signup-email" placeholder="you@example.com" autocomplete="email"></div>
-      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signup-password" placeholder="Min. 6 characters" autocomplete="new-password"></div>
+      <div class="form-group"><label class="form-label">Your Name</label><input type="text" class="form-input" id="signup-name" placeholder="Chantale" autocomplete="given-name" /></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signup-email" placeholder="you@example.com" autocomplete="email" /></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signup-password" placeholder="Min. 6 characters" autocomplete="new-password" /></div>
       <div class="error-msg" id="signup-error"></div>
       <div class="success-msg" id="signup-success"></div>
       <button class="btn-primary" id="signup-btn" onclick="handleSignup()">Create Account</button>
@@ -293,7 +296,7 @@
       </div>
       <div class="section-row">
         <div class="section-hd">Today's RPM Blocks</div>
-        <button class="section-action" onclick="switchView(&#39;daily&#39;)">View All →</button>
+        <button class="section-action" onclick="switchView('daily')">View All →</button>
       </div>
       <div class="content-pad" id="today-blocks-preview">
         <div class="empty-state">
@@ -305,7 +308,7 @@
       </div>
       <div class="section-row">
         <div class="section-hd">Daily Habits</div>
-        <button class="section-action" onclick="switchView(&#39;habits&#39;)">Track →</button>
+        <button class="section-action" onclick="switchView('habits')">Track →</button>
       </div>
       <div id="today-habits-preview">
         <div class="empty-state">
@@ -321,7 +324,7 @@
       <div class="coming-soon">
         <div class="coming-soon-icon">📋</div>
         <div class="coming-soon-title">Daily RPM Plan</div>
-        <div class="coming-soon-sub">Full RPM block builder with<br>Result · Purpose · MAP · Status<br>Daily energy &amp; nutrition tracker</div>
+        <div class="coming-soon-sub">Full RPM block builder with<br>Result · Purpose · MAP · Status<br>Daily energy & nutrition tracker</div>
         <div class="coming-soon-tag">Coming in Session 2</div>
       </div>
     </div>
@@ -387,7 +390,7 @@
         <div class="profile-email-display" id="profile-email">—</div>
       </div>
       <div class="profile-section">
-        <div class="settings-item"><span class="settings-item-label">📖 My Vision &amp; Purpose</span><span class="settings-item-arrow">›</span></div>
+        <div class="settings-item"><span class="settings-item-label">📖 My Vision & Purpose</span><span class="settings-item-arrow">›</span></div>
         <div class="settings-item"><span class="settings-item-label">⚙️ Manage Habits</span><span class="settings-item-arrow">›</span></div>
         <div class="settings-item"><span class="settings-item-label">📤 Export to iCal</span><span class="settings-item-arrow">›</span></div>
         <div class="settings-item"><span class="settings-item-label">🔔 Notification Shortcuts</span><span class="settings-item-arrow">›</span></div>
@@ -398,12 +401,12 @@
   </div>
 
   <nav class="bottom-nav">
-    <button class="nav-item active" id="nav-today" onclick="switchView(&#39;today&#39;)"><span class="nav-icon">◈</span><span class="nav-label">Today</span></button>
-    <button class="nav-item" id="nav-daily" onclick="switchView(&#39;daily&#39;)"><span class="nav-icon">▦</span><span class="nav-label">Daily</span></button>
-    <button class="nav-item" id="nav-weekly" onclick="switchView(&#39;weekly&#39;)"><span class="nav-icon">◫</span><span class="nav-label">Weekly</span></button>
-    <button class="nav-item" id="nav-habits" onclick="switchView(&#39;habits&#39;)"><span class="nav-icon">◉</span><span class="nav-label">Habits</span></button>
-    <button class="nav-item" id="nav-categories" onclick="switchView(&#39;categories&#39;)"><span class="nav-icon">◧</span><span class="nav-label">Life Areas</span></button>
-    <button class="nav-item" id="nav-profile" onclick="switchView(&#39;profile&#39;)"><span class="nav-icon">◎</span><span class="nav-label">Profile</span></button>
+    <button class="nav-item active" id="nav-today" onclick="switchView('today')"><span class="nav-icon">◈</span><span class="nav-label">Today</span></button>
+    <button class="nav-item" id="nav-daily" onclick="switchView('daily')"><span class="nav-icon">▦</span><span class="nav-label">Daily</span></button>
+    <button class="nav-item" id="nav-weekly" onclick="switchView('weekly')"><span class="nav-icon">◫</span><span class="nav-label">Weekly</span></button>
+    <button class="nav-item" id="nav-habits" onclick="switchView('habits')"><span class="nav-icon">◉</span><span class="nav-label">Habits</span></button>
+    <button class="nav-item" id="nav-categories" onclick="switchView('categories')"><span class="nav-icon">◧</span><span class="nav-label">Life Areas</span></button>
+    <button class="nav-item" id="nav-profile" onclick="switchView('profile')"><span class="nav-icon">◎</span><span class="nav-label">Profile</span></button>
   </nav>
 
 </div>
@@ -420,7 +423,7 @@
       <strong>Massive Action Plan</strong> — How do I achieve it?<br>
       <strong>Category, Duration, Priority, Status</strong>
     </p>
-    <button class="btn-primary" style="margin-top:24px" onclick="document.getElementById(&#39;add-modal&#39;).classList.remove(&#39;open&#39;)">Got it</button>
+    <button class="btn-primary" style="margin-top:24px" onclick="document.getElementById('add-modal').classList.remove('open')">Got it</button>
   </div>
 </div>
 
@@ -980,6 +983,5 @@ window.switchView = function(view) {
 
 window.addEventListener('load', init);
 </script>
-
-
-</body></html>
+</body>
+</html>
