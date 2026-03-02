@@ -171,6 +171,60 @@
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }
     @keyframes spin { to { transform: rotate(360deg); } }
+    /* HABITS TAB */
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); transition: background 0.3s; flex-shrink: 0; }
+    .sync-dot.syncing { background: var(--blue); animation: pulse 1s infinite; }
+    .sync-dot.synced  { background: #3a9c6a; }
+    .sync-dot.error   { background: #c04030; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+    .log-row { display:flex; align-items:center; padding:11px 14px; border-bottom:1px solid var(--blue-tint); gap:10px; }
+    .log-icon { font-size:16px; flex-shrink:0; width:24px; text-align:center; }
+    .log-info { flex:1; min-width:0; }
+    .log-label { font-size:13px; font-weight:500; color:var(--text); }
+    .log-goal-text { font-size:11px; color:var(--text-muted); margin-top:1px; }
+    .log-input-wrap { display:flex; align-items:center; gap:6px; flex-shrink:0; width:140px; }
+    .log-input { width:72px; flex-shrink:0; background:var(--blue-tint); border:1.5px solid var(--blue-border); border-radius:8px; padding:7px 10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:var(--text); text-align:right; outline:none; transition:border-color 0.2s; -webkit-appearance:none; }
+    .log-input:focus { border-color:var(--blue); }
+    .log-input::placeholder { color:#c0d8e8; font-weight:400; }
+    .log-unit { font-size:11px; color:var(--text-muted); white-space:nowrap; }
+    .log-goal-hit { width:20px; height:20px; border-radius:50%; background:var(--blue); color:white; font-size:11px; font-weight:700; display:none; align-items:center; justify-content:center; flex-shrink:0; }
+    .log-goal-hit.show { display:flex; }
+
+    .h-habit-row { display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid var(--blue-tint); transition:background 0.2s; }
+    .h-habit-row:last-child { border-bottom:none; }
+    .h-habit-row.dragging  { opacity:0.35; }
+    .h-habit-row.drag-over { background:var(--blue-tint); }
+    .h-drag-handle { cursor:grab; color:var(--text-muted); font-size:18px; flex-shrink:0; display:none; user-select:none; }
+    .h-check-btn { width:28px; height:28px; border-radius:50%; border:2px solid var(--blue-border); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:transparent; flex-shrink:0; background:none; cursor:pointer; transition:all 0.2s; }
+    .h-check-btn.done { background:var(--blue); border-color:var(--blue); color:white; }
+    .h-habit-info { flex:1; min-width:0; }
+    .h-habit-label { font-size:13px; font-weight:400; color:#333; line-height:1.35; }
+    .h-habit-row.done .h-habit-label { color:var(--text-muted); text-decoration:line-through; text-decoration-color:#ccc; }
+    .h-habit-note { font-size:11px; color:var(--text-muted); margin-top:1px; }
+    .h-habit-time { font-size:11px; color:var(--text-muted); white-space:nowrap; flex-shrink:0; }
+    .h-habit-actions { display:none; gap:6px; flex-shrink:0; }
+    .h-action-btn { width:28px; height:28px; border-radius:50%; border:none; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:transform 0.15s; }
+    .h-action-btn:active { transform:scale(0.88); }
+    .h-edit-action { background:var(--blue-tint); color:var(--blue); }
+    .h-del-action  { background:#fff0ee; color:#c04030; }
+    .h-section-move { font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:600; color:var(--blue-dark); background:var(--blue-tint); border:1.5px solid var(--blue-border); border-radius:20px; padding:4px 10px; outline:none; cursor:pointer; -webkit-appearance:none; flex-shrink:0; display:none; }
+    .h-habit-edit-input { width:100%; background:var(--blue-tint); border:1.5px solid var(--blue); border-radius:8px; padding:6px 10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--text); outline:none; margin-bottom:4px; }
+    .h-habit-note-input { width:100%; background:var(--blue-tint); border:1.5px solid var(--blue-border); border-radius:8px; padding:5px 10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; color:var(--text); outline:none; }
+    .h-habit-note-input:focus { border-color:var(--blue); }
+    .h-add-bar { display:flex; gap:8px; align-items:center; margin:10px 14px 0; }
+    .h-add-input { flex:1; background:var(--blue-tint); border:1.5px solid var(--blue-border); border-radius:var(--radius); padding:10px 14px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--text); outline:none; transition:border-color 0.2s; -webkit-appearance:none; }
+    .h-add-input:focus { border-color:var(--blue); }
+    .h-add-input::placeholder { color:#c0d8e8; }
+    .h-add-btn { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--blue-dark),var(--blue)); color:white; border:none; font-size:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:opacity 0.2s,transform 0.1s; }
+    .h-add-btn:active { transform:scale(0.93); opacity:0.9; }
+    .h-all-done { background:var(--blue-tint); border:1px solid var(--blue-border); border-radius:var(--radius); padding:14px 20px; margin:16px 14px 0; font-size:13px; font-weight:500; color:var(--blue-dark); text-align:center; display:none; }
+    .h-all-done.show { display:block; }
+    .h-edit-mode .h-drag-handle   { display:flex; }
+    .h-edit-mode .h-habit-actions { display:flex; }
+    .h-edit-mode .h-check-btn     { display:none; }
+    .h-edit-mode .h-habit-time    { display:none; }
+    .h-edit-mode .h-section-move  { display:block; }
   </style>
 </head>
 <body>
@@ -286,12 +340,76 @@
 
     <!-- HABITS -->
     <div class="view" id="view-habits">
-      <div class="coming-soon">
-        <div class="coming-soon-icon">✓</div>
-        <div class="coming-soon-title">Habit Tracker</div>
-        <div class="coming-soon-sub">Daily habit tracking<br>Monthly % completion<br>Streak tracking</div>
-        <div class="coming-soon-tag">Coming in Session 2</div>
+
+      <!-- HERO -->
+      <div class="hero">
+        <span class="hero-line1" id="habits-greeting">Good morning,</span>
+        <span class="hero-name"><span class="name-c">C</span><span id="habits-name">hantale</span></span>
+        <div class="hero-date" id="habits-date"></div>
       </div>
+
+      <!-- AREA 2 — SUMMARY STATS -->
+      <div class="stats" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+        <div class="stat"><div class="stat-val" id="h-stat-done">0</div><div class="stat-lbl">Done</div></div>
+        <div class="stat"><div class="stat-val" id="h-stat-total">0</div><div class="stat-lbl">Total</div></div>
+        <div class="stat"><div class="stat-val" id="h-stat-pct">0%</div><div class="stat-lbl">Today</div></div>
+        <div class="stat"><div class="stat-val" id="h-stat-streak" style="color:var(--blue-dark)">🔥 0</div><div class="stat-lbl">Day Streak</div></div>
+      </div>
+
+      <!-- AREA 1 — DAILY LOG -->
+      <div class="section-row" style="margin-top:18px">
+        <div class="section-hd">Daily Log</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="sync-dot" id="h-sync-dot"></div>
+          <button class="section-action" id="h-edit-btn" onclick="toggleHabitEditMode()">Edit</button>
+        </div>
+      </div>
+      <div class="habits-wrap" style="margin:0 14px">
+        <div class="log-row">
+          <div class="log-icon">🚶</div>
+          <div class="log-info"><div class="log-label">Steps</div><div class="log-goal-text">Goal: 10,000</div></div>
+          <div class="log-input-wrap">
+            <input class="log-input" type="number" id="log-steps" placeholder="0" min="0" max="99999" oninput="saveLog('steps',this.value);checkGoal('steps',this.value,10000)" />
+            <span class="log-unit">steps</span>
+            <div class="log-goal-hit" id="goal-steps">✓</div>
+          </div>
+        </div>
+        <div class="log-row">
+          <div class="log-icon">💧</div>
+          <div class="log-info"><div class="log-label">Water</div><div class="log-goal-text">Goal: 3 bottles</div></div>
+          <div class="log-input-wrap">
+            <input class="log-input" type="number" id="log-water" placeholder="0" min="0" max="10" step="0.5" oninput="saveLog('water_bottles',this.value);checkGoal('water',this.value,3)" />
+            <span class="log-unit">bottles</span>
+            <div class="log-goal-hit" id="goal-water">✓</div>
+          </div>
+        </div>
+        <div class="log-row">
+          <div class="log-icon">🌾</div>
+          <div class="log-info"><div class="log-label">Fibre</div><div class="log-goal-text">Goal: 25–28g</div></div>
+          <div class="log-input-wrap">
+            <input class="log-input" type="number" id="log-fibre" placeholder="0" min="0" max="200" oninput="saveLog('fibre_g',this.value);checkGoal('fibre',this.value,25)" />
+            <span class="log-unit">g</span>
+            <div class="log-goal-hit" id="goal-fibre">✓</div>
+          </div>
+        </div>
+        <div class="log-row" style="border-bottom:none">
+          <div class="log-icon">⚖️</div>
+          <div class="log-info"><div class="log-label">Weight</div><div class="log-goal-text">Daily check-in</div></div>
+          <div class="log-input-wrap">
+            <input class="log-input" type="number" id="log-weight" placeholder="0.0" min="0" max="999" step="0.1" oninput="saveLog('weight_lbs',this.value)" />
+            <span class="log-unit">lbs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AREA 3 — HABIT CHECKLIST -->
+      <div id="habits-content"></div>
+
+      <div style="text-align:center;padding:18px 14px 0">
+        <button class="section-action" style="border:1px solid var(--border);border-radius:20px;padding:7px 20px;color:var(--text-muted);font-size:12px" onclick="confirmHabitReset()">↺ Reset Day</button>
+      </div>
+      <div style="height:36px"></div>
+
     </div>
 
     <!-- LIFE AREAS -->
@@ -477,6 +595,304 @@ function closeAddModal(e) { if (e.target === document.getElementById('add-modal'
 function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 function hideLoading() { const el = document.getElementById('loading'); el.classList.add('hidden'); setTimeout(() => el.remove(), 500); }
 function showError(el, msg) { el.textContent = msg; el.classList.add('show'); }
+
+
+// ── HABITS TAB ────────────────────────────────────────────────────────────────
+const H_SECTIONS = [
+  { key:'morning', label:'Morning' },
+  { key:'daytime', label:'Daytime' },
+  { key:'evening', label:'Evening' },
+];
+const H_DEFAULT = [
+  { name:'Morning Breathing Exercise', note:'5×5×5 — 5 rounds',               time_label:'',     section:'morning', sort_order:0  },
+  { name:'Fasted Walk',                note:'',                                time_label:'',     section:'morning', sort_order:1  },
+  { name:'Meditation',                 note:'',                                time_label:'',     section:'morning', sort_order:2  },
+  { name:'10X Routine or Yoga',        note:'',                                time_label:'',     section:'morning', sort_order:3  },
+  { name:'Peaceful Warrior',           note:'Say your affirmation',            time_label:'',     section:'morning', sort_order:4  },
+  { name:'Supplements with Lunch',     note:'',                                time_label:'',     section:'daytime', sort_order:5  },
+  { name:'Walk After Lunch',           note:'',                                time_label:'',     section:'daytime', sort_order:6  },
+  { name:'Daily Planning',             note:'RPM — outcomes, purpose, actions',time_label:'',     section:'daytime', sort_order:7  },
+  { name:'Walk After Dinner',          note:'',                                time_label:'',     section:'daytime', sort_order:8  },
+  { name:'Stop Eating',                note:'3 hrs before bed',                time_label:'~7:00',section:'evening', sort_order:9  },
+  { name:'Red Glasses On',             note:'30 min before bed',               time_label:'~9:30',section:'evening', sort_order:10 },
+  { name:'Floss Teeth',                note:'',                                time_label:'',     section:'evening', sort_order:11 },
+  { name:'Nightly Face Cleansing',     note:'',                                time_label:'',     section:'evening', sort_order:12 },
+  { name:'Journal',                    note:'',                                time_label:'',     section:'evening', sort_order:13 },
+  { name:'Nighttime Breathing Exercise',note:'4-7-8 breathing',               time_label:'',     section:'evening', sort_order:14 },
+  { name:'Hypnotherapy',               note:'',                                time_label:'',     section:'evening', sort_order:15 },
+  { name:'Personal Power II',          note:'',                                time_label:'',     section:'evening', sort_order:16 },
+];
+
+const H_TODAY = new Date().toISOString().split('T')[0];
+let hHabits   = [];
+let hDone     = new Set();
+let hLog      = {};
+let hEditMode = false;
+let hDragSrc  = null;
+let hLogTimer = null;
+let hLoaded   = false;
+
+function hSync(state) { const d = document.getElementById('h-sync-dot'); if (d) d.className = 'sync-dot ' + state; }
+
+async function loadHabitsTab() {
+  if (hLoaded) return;
+  hLoaded = true;
+
+  // Set greeting
+  const now = new Date();
+  const h   = now.getHours();
+  const fullName = currentUser?.user_metadata?.full_name || 'Chantale';
+  const first = fullName.split(' ')[0] || 'Chantale';
+  const el = document.getElementById('habits-greeting');
+  if (el) el.textContent = h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
+  const nameEl = document.getElementById('habits-name');
+  if (nameEl) nameEl.textContent = first.length > 1 ? first.slice(1) : first;
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dateEl = document.getElementById('habits-date');
+  if (dateEl) dateEl.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  await Promise.all([ hLoadHabits(), hLoadCompletions(), hLoadLog(), hLoadStreak() ]);
+  hRender();
+}
+
+async function hLoadHabits() {
+  const { data, error } = await sb.from('habits').select('*').eq('user_id', currentUser.id).order('sort_order');
+  if (error) return;
+  if (!data || data.length === 0) await hSeedDefaults();
+  else hHabits = data;
+}
+
+async function hSeedDefaults() {
+  const rows = H_DEFAULT.map(h => ({ ...h, user_id: currentUser.id }));
+  const { data } = await sb.from('habits').insert(rows).select();
+  hHabits = data || [];
+}
+
+async function hLoadCompletions() {
+  const { data } = await sb.from('habit_completions').select('habit_id').eq('user_id', currentUser.id).eq('completed_date', H_TODAY);
+  hDone = new Set((data || []).map(r => r.habit_id));
+}
+
+async function hLoadLog() {
+  const { data } = await sb.from('daily_log').select('*').eq('user_id', currentUser.id).eq('log_date', H_TODAY).maybeSingle();
+  hLog = data || {};
+  const map   = { steps:'log-steps', water_bottles:'log-water', fibre_g:'log-fibre', weight_lbs:'log-weight' };
+  const goals = { steps:10000, water_bottles:3, fibre_g:25 };
+  const gkeys = { steps:'steps', water_bottles:'water', fibre_g:'fibre' };
+  Object.entries(map).forEach(([k, elId]) => {
+    const el = document.getElementById(elId);
+    if (el && hLog[k] != null) { el.value = hLog[k]; if (goals[k]) checkGoal(gkeys[k], hLog[k], goals[k]); }
+  });
+}
+
+async function hLoadStreak() {
+  const { data } = await sb.from('streaks').select('current_streak').eq('user_id', currentUser.id).maybeSingle();
+  const el = document.getElementById('h-stat-streak');
+  if (el) el.textContent = '🔥 ' + (data?.current_streak || 0);
+}
+
+async function hToggleDone(habitId) {
+  const isDone = hDone.has(habitId);
+  hSync('syncing');
+  if (isDone) {
+    hDone.delete(habitId); hRender();
+    await sb.from('habit_completions').delete().eq('user_id', currentUser.id).eq('habit_id', habitId).eq('completed_date', H_TODAY);
+  } else {
+    hDone.add(habitId); hRender();
+    await sb.from('habit_completions').upsert({ user_id: currentUser.id, habit_id: habitId, completed_date: H_TODAY });
+    if (hDone.size >= hHabits.length) await hUpdateStreak();
+  }
+  hSync('synced');
+}
+
+async function hUpdateStreak() {
+  const { data: ex } = await sb.from('streaks').select('*').eq('user_id', currentUser.id).maybeSingle();
+  if (ex?.last_completed_date === H_TODAY) return;
+  const yest = new Date(); yest.setDate(yest.getDate() - 1);
+  const yStr = yest.toISOString().split('T')[0];
+  const cur  = ex?.last_completed_date === yStr ? (ex.current_streak || 0) + 1 : 1;
+  const best = Math.max(cur, ex?.best_streak || 0);
+  await sb.from('streaks').upsert({ user_id: currentUser.id, current_streak: cur, best_streak: best, last_completed_date: H_TODAY, updated_at: new Date().toISOString() });
+  const el = document.getElementById('h-stat-streak');
+  if (el) el.textContent = '🔥 ' + cur;
+}
+
+function saveLog(field, value) {
+  hLog[field] = value === '' ? null : parseFloat(value);
+  clearTimeout(hLogTimer);
+  hSync('syncing');
+  hLogTimer = setTimeout(async () => {
+    const payload = { user_id: currentUser.id, log_date: H_TODAY, steps: hLog.steps ?? null, water_bottles: hLog.water_bottles ?? null, fibre_g: hLog.fibre_g ?? null, weight_lbs: hLog.weight_lbs ?? null, updated_at: new Date().toISOString() };
+    const { error } = await sb.from('daily_log').upsert(payload, { onConflict: 'user_id,log_date' });
+    hSync(error ? 'error' : 'synced');
+  }, 800);
+}
+
+function checkGoal(key, value, goal) {
+  const el = document.getElementById('goal-' + key);
+  if (!el) return;
+  parseFloat(value) >= goal ? el.classList.add('show') : el.classList.remove('show');
+}
+
+async function hAddHabit(section, input) {
+  const name = input.value.trim(); if (!name) return;
+  hSync('syncing');
+  const maxOrder = hHabits.filter(h => h.section === section).reduce((m,h) => Math.max(m, h.sort_order), 0);
+  const { data } = await sb.from('habits').insert({ user_id: currentUser.id, name, note: '', time_label: '', section, sort_order: maxOrder + 1 }).select().single();
+  if (data) hHabits.push(data);
+  input.value = ''; hSync('synced'); hRender();
+}
+
+async function hDeleteHabit(id) {
+  hSync('syncing'); hHabits = hHabits.filter(h => h.id !== id); hDone.delete(id); hRender();
+  await sb.from('habits').delete().eq('id', id).eq('user_id', currentUser.id);
+  hSync('synced');
+}
+
+async function hSaveEdit(id, name, note) {
+  hSync('syncing');
+  const h = hHabits.find(h => h.id === id); if (h) { h.name = name; h.note = note; }
+  await sb.from('habits').update({ name, note }).eq('id', id).eq('user_id', currentUser.id);
+  hSync('synced'); hRender();
+}
+
+async function hMoveSection(id, section) {
+  hSync('syncing');
+  const h = hHabits.find(h => h.id === id); if (h) h.section = section;
+  hRender();
+  await sb.from('habits').update({ section }).eq('id', id).eq('user_id', currentUser.id);
+  hSync('synced');
+}
+
+async function hSaveOrder() {
+  await Promise.all(hHabits.map((h, i) => sb.from('habits').update({ sort_order: i }).eq('id', h.id).eq('user_id', currentUser.id)));
+}
+
+function hRender() {
+  const content = document.getElementById('habits-content');
+  if (!content) return;
+  content.innerHTML = '';
+  hEditMode ? content.classList.add('h-edit-mode') : content.classList.remove('h-edit-mode');
+
+  H_SECTIONS.forEach(sec => {
+    const sh = hHabits.filter(h => h.section === sec.key);
+    const sd = sh.filter(h => hDone.has(h.id)).length;
+    const row = document.createElement('div');
+    row.className = 'section-row';
+    row.innerHTML = `<div class="section-hd">${sec.label}</div><div style="font-size:10px;font-weight:600;color:var(--blue);background:var(--blue-tint);border:1px solid var(--blue-border);border-radius:20px;padding:2px 9px">${sd} / ${sh.length}</div>`;
+    content.appendChild(row);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'habits-wrap'; wrap.style.margin = '0 14px';
+    sh.forEach(h => wrap.appendChild(hMakeRow(h)));
+    content.appendChild(wrap);
+    content.appendChild(hMakeAddBar(sec.key));
+  });
+
+  const ad = document.createElement('div');
+  ad.className = 'h-all-done' + (hHabits.length > 0 && hDone.size >= hHabits.length ? ' show' : '');
+  ad.textContent = '🎉 Outstanding! Every habit complete today!';
+  content.appendChild(ad);
+  hUpdateStats();
+}
+
+function hMakeRow(habit) {
+  const isDone = hDone.has(habit.id);
+  const row = document.createElement('div');
+  row.className = 'h-habit-row' + (isDone ? ' done' : '');
+  row.draggable = hEditMode; row.dataset.id = habit.id;
+
+  const handle = document.createElement('div'); handle.className = 'h-drag-handle'; handle.textContent = '⠿';
+  const check  = document.createElement('button'); check.className = 'h-check-btn' + (isDone ? ' done' : ''); check.textContent = '✓'; check.onclick = () => hToggleDone(habit.id);
+  const info   = document.createElement('div'); info.className = 'h-habit-info';
+  info.innerHTML = `<div class="h-habit-label">${habit.name}</div>` + (habit.note ? `<div class="h-habit-note">${habit.note}</div>` : '');
+  const time = document.createElement('div'); time.className = 'h-habit-time'; time.textContent = habit.time_label || '';
+
+  const sel = document.createElement('select'); sel.className = 'h-section-move';
+  H_SECTIONS.forEach(s => { const o = document.createElement('option'); o.value = s.key; o.textContent = s.label; if (s.key === habit.section) o.selected = true; sel.appendChild(o); });
+  sel.addEventListener('change', () => hMoveSection(habit.id, sel.value));
+
+  const actions = document.createElement('div'); actions.className = 'h-habit-actions';
+  const eb = document.createElement('button'); eb.className = 'h-action-btn h-edit-action'; eb.innerHTML = '✎'; eb.onclick = () => hStartEdit(habit.id, row);
+  const db = document.createElement('button'); db.className = 'h-action-btn h-del-action';  db.innerHTML = '✕'; db.onclick = () => hDeleteHabit(habit.id);
+  actions.appendChild(eb); actions.appendChild(db);
+
+  row.appendChild(handle); row.appendChild(check); row.appendChild(info); row.appendChild(time); row.appendChild(sel); row.appendChild(actions);
+
+  row.addEventListener('dragstart', e => { hDragSrc = row; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+  row.addEventListener('dragend',   () => { row.classList.remove('dragging'); document.querySelectorAll('.drag-over').forEach(r => r.classList.remove('drag-over')); });
+  row.addEventListener('dragover',  e => { e.preventDefault(); if (hDragSrc !== row) row.classList.add('drag-over'); });
+  row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+  row.addEventListener('drop', async e => {
+    e.preventDefault(); row.classList.remove('drag-over');
+    if (!hDragSrc || hDragSrc === row) return;
+    const si = hHabits.findIndex(h => h.id === hDragSrc.dataset.id);
+    const di = hHabits.findIndex(h => h.id === row.dataset.id);
+    const moved = hHabits.splice(si, 1)[0];
+    const ni = hHabits.findIndex(h => h.id === row.dataset.id);
+    moved.section = hHabits[ni]?.section || moved.section;
+    hHabits.splice(ni, 0, moved);
+    hRender(); await hSaveOrder();
+  });
+  return row;
+}
+
+function hMakeAddBar(section) {
+  const bar = document.createElement('div'); bar.className = 'h-add-bar';
+  const inp = document.createElement('input'); inp.className = 'h-add-input'; inp.type = 'text'; inp.placeholder = `Add habit to ${section}…`;
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') hAddHabit(section, inp); });
+  const btn = document.createElement('button'); btn.className = 'h-add-btn'; btn.textContent = '+'; btn.onclick = () => hAddHabit(section, inp);
+  bar.appendChild(inp); bar.appendChild(btn);
+  return bar;
+}
+
+function hStartEdit(id, row) {
+  const habit = hHabits.find(h => h.id === id);
+  const info  = row.querySelector('.h-habit-info');
+  info.innerHTML = '';
+  const ni = document.createElement('input'); ni.className = 'h-habit-edit-input'; ni.value = habit.name;
+  const no = document.createElement('input'); no.className = 'h-habit-note-input'; no.value = habit.note; no.placeholder = 'Note (optional)';
+  function save() { const n = ni.value.trim(); if (n) hSaveEdit(id, n, no.value.trim()); }
+  ni.addEventListener('keydown', e => { if (e.key === 'Enter') no.focus(); });
+  no.addEventListener('keydown', e => { if (e.key === 'Enter') save(); });
+  ni.addEventListener('blur', () => setTimeout(() => { if (!no.matches(':focus')) save(); }, 150));
+  no.addEventListener('blur', () => setTimeout(() => { if (!ni.matches(':focus')) save(); }, 150));
+  info.appendChild(ni); info.appendChild(no); ni.focus(); ni.select();
+}
+
+function toggleHabitEditMode() {
+  hEditMode = !hEditMode;
+  const btn = document.getElementById('h-edit-btn');
+  if (btn) btn.textContent = hEditMode ? 'Done' : 'Edit';
+  hRender();
+}
+
+async function confirmHabitReset() {
+  if (!confirm("Reset today's check-ins and log?")) return;
+  hSync('syncing'); hDone.clear(); hLog = {};
+  ['log-steps','log-water','log-fibre','log-weight'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['goal-steps','goal-water','goal-fibre'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('show'); });
+  await Promise.all([
+    sb.from('habit_completions').delete().eq('user_id', currentUser.id).eq('completed_date', H_TODAY),
+    sb.from('daily_log').delete().eq('user_id', currentUser.id).eq('log_date', H_TODAY),
+  ]);
+  hSync('synced'); hRender();
+}
+
+function hUpdateStats() {
+  const total = hHabits.length, done = hDone.size;
+  const d = document.getElementById('h-stat-done');   if (d) d.textContent = done;
+  const t = document.getElementById('h-stat-total');  if (t) t.textContent = total;
+  const p = document.getElementById('h-stat-pct');    if (p) p.textContent = total ? Math.round(done/total*100)+'%' : '0%';
+}
+
+// ── PATCH switchView to load habits on demand ─────────────────────────────────
+const _origSwitchView = switchView;
+window.switchView = function(view) {
+  _origSwitchView(view);
+  if (view === 'habits' && currentUser) loadHabitsTab();
+};
 
 window.addEventListener('load', init);
 </script>
