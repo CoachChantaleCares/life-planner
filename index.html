@@ -565,7 +565,7 @@ function showError(el, msg) { el.textContent = msg; el.classList.add('show'); }
 // ── HABITS TAB ────────────────────────────────────────────────────────────────
 const H_SECTIONS = [
   { key:'morning', label:'Morning' },
-  { key:'afternoon', label:'Afternoon' },
+  { key:'daytime', label:'Afternoon' },
   { key:'evening', label:'Evening' },
 ];
 const H_DEFAULT = [
@@ -574,10 +574,10 @@ const H_DEFAULT = [
   { name:'Meditation',                 note:'',                                time_label:'',     section:'morning', sort_order:2  },
   { name:'10X Routine or Yoga',        note:'',                                time_label:'',     section:'morning', sort_order:3  },
   { name:'Peaceful Warrior',           note:'Say your affirmation',            time_label:'',     section:'morning', sort_order:4  },
-  { name:'Supplements with Lunch',     note:'',                                time_label:'',     section:'afternoon', sort_order:5  },
-  { name:'Walk After Lunch',           note:'',                                time_label:'',     section:'afternoon', sort_order:6  },
-  { name:'Daily Planning',             note:'RPM — outcomes, purpose, actions',time_label:'',     section:'afternoon', sort_order:7  },
-  { name:'Walk After Dinner',          note:'',                                time_label:'',     section:'afternoon', sort_order:8  },
+  { name:'Supplements with Lunch',     note:'',                                time_label:'',     section:'daytime', sort_order:5  },
+  { name:'Walk After Lunch',           note:'',                                time_label:'',     section:'daytime', sort_order:6  },
+  { name:'Daily Planning',             note:'RPM — outcomes, purpose, actions',time_label:'',     section:'daytime', sort_order:7  },
+  { name:'Walk After Dinner',          note:'',                                time_label:'',     section:'daytime', sort_order:8  },
   { name:'Stop Eating',                note:'3 hrs before bed',                time_label:'~7:00',section:'evening', sort_order:9  },
   { name:'Red Glasses On',             note:'30 min before bed',               time_label:'~9:30',section:'evening', sort_order:10 },
   { name:'Floss Teeth',                note:'',                                time_label:'',     section:'evening', sort_order:11 },
